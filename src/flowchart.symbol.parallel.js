@@ -4,7 +4,6 @@ var inherits = require('./flowchart.helpers').inherits;
 function Parallel(chart, options) {
   options = options || {};
   Symbol.call(this, chart, options, () => {
-    this.textMargin = this.getAttr('text-margin');
     this.path1_direction = 'bottom';
     this.path2_direction = 'right';
     this.path3_direction = 'top';
@@ -96,48 +95,7 @@ function Parallel(chart, options) {
     this.path2_direction = this.path2_direction || 'right';
     this.path3_direction = this.path3_direction || 'top';
 
-    var symbol = chart.paper.rect(0, 0, 0, 0);
-    symbol.attr({
-      fill: this.getAttr('fill'),
-      stroke: this.getAttr('element-color'),
-      'stroke-width': this.getAttr('line-width'),
-      width: this.text.getBBox().width + 2 * this.textMargin,
-      height: this.text.getBBox().height + 2 * this.textMargin,
-    });
-
-    symbol.node.setAttribute('class', this.getAttr('class'));
-
-    if (options.link) {
-      symbol.attr('href', options.link);
-    }
-    if (options.target) {
-      symbol.attr('target', options.target);
-    }
-
-    //ndrqu Add click function with event and options params
-    if (options.function) {
-      symbol.node.addEventListener(
-        'click',
-        function (evt) {
-          window[options.function](evt, options);
-        },
-        false
-      );
-      symbol.attr({ cursor: 'pointer' });
-    }
-    if (options.key) {
-      symbol.node.id = options.key;
-    }
-
-    this.symbol = symbol;
-    this.group.push(symbol);
-    symbol.insertBefore(this.text);
-
-    this.text.attr({
-      y: symbol.getBBox().height / 2,
-    });
-
-    this.initialize();
+    this.initSymbol(chart, options);
   });
 }
 inherits(Parallel, Symbol);

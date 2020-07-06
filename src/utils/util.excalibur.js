@@ -5,6 +5,8 @@ const typeDataMap = {
   start: rectData,
   end: rectData,
   operation: rectData,
+  parallel: rectData,
+  subroutine: rectData,
 };
 
 function splitNum(str) {
