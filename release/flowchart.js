@@ -163,6 +163,70 @@
     // }
   };
 
+  const path =
+    'M0.0641499905847013 -0.015804485883563757 C0.2424007847905159 -0.06936944252811374, 0.5955324650742114 -0.056038556760177015, 1.0092416285537182 -0.09734808346256614 M-0.019663748843595386 0.011179570807144046 C0.259725610120222 -0.013403038419783115, 0.4593260458204895 -0.023059275485575202, 1.0217802860308438 -0.04381300513632596 M1.0686826466582715 -0.019963158573955295 C0.9490461017657071 0.30267627257853746, 1.0702910121250897 0.6206023591570556, 1.083006366994232 1.0003411785699428 M1.029932663636282 -0.02039361302740872 C0.9782374534569681 0.390025649825111, 1.0431556124053896 0.7235069987829775, 1.0397002630401402 0.9713972106110305 M1.0495068638585507 0.945825316105038 C0.6043268961831928 1.0926049056183547, 0.40743479700759055 0.9373160632979125, -0.08125923285260797 0.9355709717608989 M1.0245902352500706 0.9952457561623305 C0.761517841508612 1.0431499176658692, 0.5320018614176661 0.9834544845856728, -0.03349261204712093 0.9781238734256477 M0.06752046933397651 1.0805752203799783 C0.054638560032472014 0.6786474615335464, 0.01803530297242105 0.2678376569412648, 0.028026249911636103 0.05510948458686471 M-0.019826471013948323 0.9564176857005805 C0.044625881947576995 0.7466487661469727, 0.02391581747680903 0.4611962051596492, -0.028369323117658496 -0.015596212493255733';
+
+  const data = {
+    path,
+    init({ calcBaseRatio }) {
+      const ref = (data.ratioBase = {});
+      ref.x = calcBaseRatio(
+        path,
+        'M0.1282999811694026 -0.031608971767127514 C0.4848015695810318 -0.13873888505622747, 1.1910649301484229 -0.11207711352035403, 2.0184832571074365 -0.19469616692513228 M-0.03932749768719077 0.02235914161428809 C0.519451220240444 -0.02680607683956623, 0.918652091640979 -0.046118550971150404, 2.0435605720616876 -0.08762601027265192 M2.0686826466582717 -0.019963158573955295 C1.949046101765707 0.30267627257853746, 2.07029101212509 0.6206023591570556, 2.083006366994232 1.0003411785699428 M2.029932663636282 -0.02039361302740872 C1.978237453456968 0.390025649825111, 2.0431556124053896 0.7235069987829775, 2.03970026304014 0.9713972106110305 M2.0990137277171015 0.8916506322100759 C1.2086537923663856 1.1852098112367093, 0.8148695940151811 0.8746321265958249, -0.16251846570521594 0.8711419435217976 M2.0491804705001413 0.990491512324661 C1.523035683017224 1.086299835331738, 1.0640037228353323 0.9669089691713452, -0.06698522409424186 0.9562477468512952 M0.06752046933397651 1.0805752203799783 C0.054638560032472014 0.6786474615335464, 0.01803530297242105 0.2678376569412648, 0.028026249911636103 0.05510948458686471 M-0.019826471013948323 0.9564176857005805 C0.044625881947576995 0.7466487661469727, 0.02391581747680903 0.4611962051596492, -0.028369323117658496 -0.015596212493255733'
+      );
+      ref.y = calcBaseRatio(
+        path,
+        'M0.0641499905847013 -0.015804485883563757 C0.2424007847905159 -0.06936944252811374, 0.5955324650742114 -0.056038556760177015, 1.0092416285537182 -0.09734808346256614 M-0.019663748843595386 0.011179570807144046 C0.259725610120222 -0.013403038419783115, 0.4593260458204895 -0.023059275485575202, 1.0217802860308438 -0.04381300513632596 M1.137365293316543 -0.03992631714791059 C0.8980922035314143 0.6053525451570749, 1.1405820242501794 1.2412047183141113, 1.1660127339884638 2.0006823571398855 M1.0598653272725642 -0.04078722605481744 C0.9564749069139362 0.780051299650222, 1.0863112248107791 1.447013997565955, 1.0794005260802806 1.942794421222061 M1.0495068638585507 1.9458253161050378 C0.6043268961831928 2.0926049056183547, 0.40743479700759055 1.9373160632979125, -0.08125923285260797 1.9355709717608989 M1.0245902352500706 1.9952457561623305 C0.761517841508612 2.043149917665869, 0.5320018614176661 1.9834544845856728, -0.03349261204712093 1.9781238734256477 M0.13504093866795303 2.1611504407599567 C0.10927712006494403 1.3572949230670928, 0.0360706059448421 0.5356753138825296, 0.056052499823272206 0.11021896917372942 M-0.03965294202789665 1.912835371401161 C0.08925176389515399 1.4932975322939455, 0.04783163495361806 0.9223924103192984, -0.05673864623531699 -0.031192424986511466'
+      );
+      return data;
+    },
+  };
+
+  var rectangle = data;
+
+  const typeDataMap = {
+    start: rectangle.init({ calcBaseRatio }),
+  };
+
+  function splitNum(str) {
+    return str.split(/\s/g).map((x) => x.replace(/[a-zA-Z,]/g, ''));
+  }
+  function calcBaseRatio(p1, p2) {
+    const n1 = splitNum(p1);
+    const n2 = splitNum(p2);
+    return n1.map((x, i) => {
+      const res = n2[i] - x;
+      if (res == 0) return 0;
+      else return res / Math.abs(x);
+    });
+  }
+  function calcPath({ ratio, type }) {
+    const dataRef = typeDataMap[type];
+    const { x: rx, y: ry } = ratio;
+    const ns = splitNum(dataRef.path);
+    const offset = {
+      x: ns.map((x, i) => +x * +dataRef.ratioBase.x[i] * +rx),
+      y: ns.map((x, i) => +x * +dataRef.ratioBase.y[i] * +ry),
+    };
+    const dots = ns.map((x, i) => +x + offset.x[i] + offset.y[i]);
+    let i = 0;
+    return dataRef.path.replace(/[-\d.]+/g, () => dots[i++]);
+  }
+
+  var util_excalibur = { splitNum, calcBaseRatio, calcPath };
+  var util_excalibur_1 = util_excalibur.splitNum;
+  var util_excalibur_2 = util_excalibur.calcBaseRatio;
+  var util_excalibur_3 = util_excalibur.calcPath;
+
+  var util_excalibur$1 = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    'default': util_excalibur,
+    __moduleExports: util_excalibur,
+    splitNum: util_excalibur_1,
+    calcBaseRatio: util_excalibur_2,
+    calcPath: util_excalibur_3
+  });
+
   function drawPath(chart, location, points) {
     var i, len;
     var path = 'M{0},{1}';
@@ -343,9 +407,9 @@
     this.symbol = symbol;
     this.connectedTo = [];
     this.symbolType = options.symbolType;
-    this.flowstate = (options.flowstate || 'future');
-    this.lineStyle = (options.lineStyle || {});
-    this.key = (options.key || '');
+    this.flowstate = options.flowstate || 'future';
+    this.lineStyle = options.lineStyle || {};
+    this.key = options.key || '';
     this.leftLines = [];
     this.rightLines = [];
     this.topLines = [];
@@ -355,52 +419,62 @@
 
     this.text = this.chart.paper.text(0, 0, options.text);
     //Raphael does not support the svg group tag so setting the text node id to the symbol node id plus t
-    if (options.key) { this.text.node.id = options.key + 't'; }
+    if (options.key) {
+      this.text.node.id = options.key + 't';
+    }
     this.text.node.setAttribute('class', this.getAttr('class') + 't');
 
     this.text.attr({
       'text-anchor': 'start',
-      'x'          : this.getAttr('text-margin'),
-      'fill'       : this.getAttr('font-color'),
-      'font-size'  : this.getAttr('font-size')
+      x: this.getAttr('text-margin'),
+      fill: this.getAttr('font-color'),
+      'font-size': this.getAttr('font-size'),
     });
 
-    var font  = this.getAttr('font');
+    var font = this.getAttr('font');
     var fontF = this.getAttr('font-family');
     var fontW = this.getAttr('font-weight');
 
-    if (font) this.text.attr({ 'font': font });
+    if (font) this.text.attr({ font: font });
     if (fontF) this.text.attr({ 'font-family': fontF });
     if (fontW) this.text.attr({ 'font-weight': fontW });
 
-    if (options.link) { this.text.attr('href', options.link); }
-    
-    //ndrqu Add click function with event and options params
-    if (options.function) { 
-      this.text.attr({ 'cursor' : 'pointer' });
+    if (options.link) {
+      this.text.attr('href', options.link);
+    }
 
-      this.text.node.addEventListener("click", function(evt) {
-          window[options.function](evt,options);
-      }, false);
-     }
-     
-    if (options.target) { this.text.attr('target', options.target); }
+    //ndrqu Add click function with event and options params
+    if (options.function) {
+      this.text.attr({ cursor: 'pointer' });
+
+      this.text.node.addEventListener(
+        'click',
+        function (evt) {
+          window[options.function](evt, options);
+        },
+        false
+      );
+    }
+
+    if (options.target) {
+      this.text.attr('target', options.target);
+    }
 
     var maxWidth = this.getAttr('maxWidth');
     if (maxWidth) {
       // using this approach: http://stackoverflow.com/a/3153457/22466
       var words = options.text.split(' ');
-      var tempText = "";
-      for (var i=0, ii=words.length; i<ii; i++) {
+      var tempText = '';
+      for (var i = 0, ii = words.length; i < ii; i++) {
         var word = words[i];
-        this.text.attr("text", tempText + " " + word);
+        this.text.attr('text', tempText + ' ' + word);
         if (this.text.getBBox().width > maxWidth) {
-          tempText += "\n" + word;
+          tempText += '\n' + word;
         } else {
-          tempText += " " + word;
+          tempText += ' ' + word;
         }
       }
-      this.text.attr("text", tempText.substring(1));
+      this.text.attr('text', tempText.substring(1));
     }
 
     this.group.push(this.text);
@@ -409,125 +483,131 @@
       var tmpMargin = this.getAttr('text-margin');
 
       symbol.attr({
-        'fill' : this.getAttr('fill'),
-        'stroke' : this.getAttr('element-color'),
-        'stroke-width' : this.getAttr('line-width'),
-        'width' : this.text.getBBox().width + 2 * tmpMargin,
-        'height' : this.text.getBBox().height + 2 * tmpMargin
+        fill: this.getAttr('fill'),
+        stroke: this.getAttr('element-color'),
+        'stroke-width': this.getAttr('line-width'),
+        width: this.text.getBBox().width + 2 * tmpMargin,
+        height: this.text.getBBox().height + 2 * tmpMargin,
       });
 
       symbol.node.setAttribute('class', this.getAttr('class'));
 
-      if (options.link) { symbol.attr('href', options.link); }
-      if (options.target) { symbol.attr('target', options.target); }
+      if (options.link) {
+        symbol.attr('href', options.link);
+      }
+      if (options.target) {
+        symbol.attr('target', options.target);
+      }
 
       //ndrqu Add click function with event and options params
-      if (options.function) { 
-          symbol.node.addEventListener("click", function(evt) {
-            window[options.function](evt,options);
-          }, false);
-        symbol.attr({ 'cursor' : 'pointer' });
+      if (options.function) {
+        symbol.node.addEventListener(
+          'click',
+          function (evt) {
+            window[options.function](evt, options);
+          },
+          false
+        );
+        symbol.attr({ cursor: 'pointer' });
       }
-      if (options.key) { symbol.node.id = options.key; }
+      if (options.key) {
+        symbol.node.id = options.key;
+      }
 
       this.group.push(symbol);
       symbol.insertBefore(this.text);
 
       this.text.attr({
-        'y': symbol.getBBox().height/2
+        y: symbol.getBBox().height / 2,
       });
 
       this.initialize();
     }
-
   }
 
   /* Gets the attribute based on Flowstate, Symbol-Name and default, first found wins */
-  Symbol.prototype.getAttr = function(attName) {
+  Symbol.prototype.getAttr = function (attName) {
     if (!this.chart) {
       return undefined;
     }
-    var opt3 = (this.chart.options) ? this.chart.options[attName] : undefined;
-    var opt2 = (this.chart.options.symbols) ? this.chart.options.symbols[this.symbolType][attName] : undefined;
+    var opt3 = this.chart.options ? this.chart.options[attName] : undefined;
+    var opt2 = this.chart.options.symbols ? this.chart.options.symbols[this.symbolType][attName] : undefined;
     var opt1;
     if (this.chart.options.flowstate && this.chart.options.flowstate[this.flowstate]) {
       opt1 = this.chart.options.flowstate[this.flowstate][attName];
     }
-    return (opt1 || opt2 || opt3);
+    return opt1 || opt2 || opt3;
   };
 
-  Symbol.prototype.initialize = function() {
+  Symbol.prototype.initialize = function () {
     this.group.transform('t' + this.getAttr('line-width') + ',' + this.getAttr('line-width'));
 
     this.width = this.group.getBBox().width;
     this.height = this.group.getBBox().height;
   };
 
-  Symbol.prototype.getCenter = function() {
-    return {x: this.getX() + this.width/2,
-            y: this.getY() + this.height/2};
+  Symbol.prototype.getCenter = function () {
+    return { x: this.getX() + this.width / 2, y: this.getY() + this.height / 2 };
   };
 
-  Symbol.prototype.getX = function() {
+  Symbol.prototype.getX = function () {
     return this.group.getBBox().x;
   };
 
-  Symbol.prototype.getY = function() {
+  Symbol.prototype.getY = function () {
     return this.group.getBBox().y;
   };
 
-  Symbol.prototype.shiftX = function(x) {
+  Symbol.prototype.shiftX = function (x) {
     this.group.transform('t' + (this.getX() + x) + ',' + this.getY());
   };
 
-  Symbol.prototype.setX = function(x) {
+  Symbol.prototype.setX = function (x) {
     this.group.transform('t' + x + ',' + this.getY());
   };
 
-  Symbol.prototype.shiftY = function(y) {
+  Symbol.prototype.shiftY = function (y) {
     this.group.transform('t' + this.getX() + ',' + (this.getY() + y));
   };
 
-  Symbol.prototype.setY = function(y) {
+  Symbol.prototype.setY = function (y) {
     this.group.transform('t' + this.getX() + ',' + y);
   };
 
-  Symbol.prototype.getTop = function() {
+  Symbol.prototype.getTop = function () {
     var y = this.getY();
-    var x = this.getX() + this.width/2;
-    return {x: x, y: y};
+    var x = this.getX() + this.width / 2;
+    return { x: x, y: y };
   };
 
-  Symbol.prototype.getBottom = function() {
+  Symbol.prototype.getBottom = function () {
     var y = this.getY() + this.height;
-    var x = this.getX() + this.width/2;
-    return {x: x, y: y};
+    var x = this.getX() + this.width / 2;
+    return { x: x, y: y };
   };
 
-  Symbol.prototype.getLeft = function() {
-    var y = this.getY() + this.group.getBBox().height/2;
+  Symbol.prototype.getLeft = function () {
+    var y = this.getY() + this.group.getBBox().height / 2;
     var x = this.getX();
-    return {x: x, y: y};
+    return { x: x, y: y };
   };
 
-  Symbol.prototype.getRight = function() {
-    var y = this.getY() + this.group.getBBox().height/2;
+  Symbol.prototype.getRight = function () {
+    var y = this.getY() + this.group.getBBox().height / 2;
     var x = this.getX() + this.group.getBBox().width;
-    return {x: x, y: y};
+    return { x: x, y: y };
   };
 
-  Symbol.prototype.render = function() {
+  Symbol.prototype.render = function () {
     if (this.next) {
-
       var self = this;
       var lineLength = this.getAttr('line-length');
 
       if (this.next_direction === 'right') {
-
         var rightPoint = this.getRight();
 
         if (!this.next.isPositioned) {
-          this.next.setY(rightPoint.y - this.next.height/2);
+          this.next.setY(rightPoint.y - this.next.height / 2);
           this.next.shiftX(this.group.getBBox().x + this.width + lineLength);
 
           (function shift() {
@@ -537,7 +617,7 @@
               symb = self.chart.symbols[i];
 
               var diff = Math.abs(symb.getCenter().x - self.next.getCenter().x);
-              if (symb.getCenter().y > self.next.getCenter().y && diff <= self.next.width/2) {
+              if (symb.getCenter().y > self.next.getCenter().y && diff <= self.next.width / 2) {
                 hasSymbolUnder = true;
                 break;
               }
@@ -555,11 +635,10 @@
           this.next.render();
         }
       } else if (this.next_direction === 'left') {
-
         var leftPoint = this.getLeft();
 
         if (!this.next.isPositioned) {
-          this.next.setY(leftPoint.y - this.next.height/2);
+          this.next.setY(leftPoint.y - this.next.height / 2);
           this.next.shiftX(-(this.group.getBBox().x + this.width + lineLength));
 
           (function shift() {
@@ -569,7 +648,7 @@
               symb = self.chart.symbols[i];
 
               var diff = Math.abs(symb.getCenter().x - self.next.getCenter().x);
-              if (symb.getCenter().y > self.next.getCenter().y && diff <= self.next.width/2) {
+              if (symb.getCenter().y > self.next.getCenter().y && diff <= self.next.width / 2) {
                 hasSymbolUnder = true;
                 break;
               }
@@ -591,7 +670,7 @@
 
         if (!this.next.isPositioned) {
           this.next.shiftY(this.getY() + this.height + lineLength);
-          this.next.setX(bottomPoint.x - this.next.width/2);
+          this.next.setX(bottomPoint.x - this.next.width / 2);
           this.next.isPositioned = true;
 
           this.next.render();
@@ -600,7 +679,7 @@
     }
   };
 
-  Symbol.prototype.renderLines = function() {
+  Symbol.prototype.renderLines = function () {
     if (this.next) {
       if (this.next_direction) {
         this.drawLineTo(this.next, this.getAttr('arrow-text') || '', this.next_direction);
@@ -610,46 +689,51 @@
     }
   };
 
-  Symbol.prototype.drawLineTo = function(symbol, text, origin) {
+  Symbol.prototype.drawLineTo = function (symbol, text, origin) {
     if (this.connectedTo.indexOf(symbol) < 0) {
       this.connectedTo.push(symbol);
     }
 
     var x = this.getCenter().x,
-        y = this.getCenter().y,
-        right = this.getRight(),
-        bottom = this.getBottom(),
-        top = this.getTop(),
-        left = this.getLeft();
+      y = this.getCenter().y,
+      right = this.getRight(),
+      bottom = this.getBottom(),
+      top = this.getTop(),
+      left = this.getLeft();
 
     var symbolX = symbol.getCenter().x,
-        symbolY = symbol.getCenter().y,
-        symbolTop = symbol.getTop(),
-        symbolRight = symbol.getRight(),
-        symbolLeft = symbol.getLeft();
+      symbolY = symbol.getCenter().y,
+      symbolTop = symbol.getTop(),
+      symbolRight = symbol.getRight(),
+      symbolLeft = symbol.getLeft();
 
     var isOnSameColumn = x === symbolX,
-        isOnSameLine = y === symbolY,
-        isUnder = y < symbolY,
-        isUpper = y > symbolY || this === symbol,
-        isLeft = x > symbolX,
-        isRight = x < symbolX;
+      isOnSameLine = y === symbolY,
+      isUnder = y < symbolY,
+      isUpper = y > symbolY || this === symbol,
+      isLeft = x > symbolX,
+      isRight = x < symbolX;
 
     var maxX = 0,
-        line,
-        yOffset,
-        lineLength = this.getAttr('line-length'),
-        lineWith = this.getAttr('line-width');
+      line,
+      yOffset,
+      lineLength = this.getAttr('line-length'),
+      lineWith = this.getAttr('line-width');
 
     if ((!origin || origin === 'bottom') && isOnSameColumn && isUnder) {
       if (symbol.topLines.length === 0 && this.bottomLines.length === 0) {
         line = drawLine$1(this.chart, bottom, symbolTop, text);
       } else {
         yOffset = Math.max(symbol.topLines.length, this.bottomLines.length) * 10;
-        line = drawLine$1(this.chart, bottom, [
-          {x: symbolTop.x, y: symbolTop.y - yOffset},
-          {x: symbolTop.x, y: symbolTop.y}
-        ], text);
+        line = drawLine$1(
+          this.chart,
+          bottom,
+          [
+            { x: symbolTop.x, y: symbolTop.y - yOffset },
+            { x: symbolTop.x, y: symbolTop.y },
+          ],
+          text
+        );
       }
       this.bottomLines.push(line);
       symbol.topLines.push(line);
@@ -661,12 +745,17 @@
         line = drawLine$1(this.chart, right, symbolLeft, text);
       } else {
         yOffset = Math.max(symbol.leftLines.length, this.rightLines.length) * 10;
-        line = drawLine$1(this.chart, right, [
-          {x: right.x, y: right.y - yOffset},
-          {x: right.x, y: symbolLeft.y - yOffset},
-          {x: symbolLeft.x, y: symbolLeft.y - yOffset},
-          {x: symbolLeft.x, y: symbolLeft.y}
-        ], text);
+        line = drawLine$1(
+          this.chart,
+          right,
+          [
+            { x: right.x, y: right.y - yOffset },
+            { x: right.x, y: symbolLeft.y - yOffset },
+            { x: symbolLeft.x, y: symbolLeft.y - yOffset },
+            { x: symbolLeft.x, y: symbolLeft.y },
+          ],
+          text
+        );
       }
       this.rightLines.push(line);
       symbol.leftLines.push(line);
@@ -678,12 +767,17 @@
         line = drawLine$1(this.chart, left, symbolRight, text);
       } else {
         yOffset = Math.max(symbol.rightLines.length, this.leftLines.length) * 10;
-        line = drawLine$1(this.chart, right, [
-          {x: right.x, y: right.y - yOffset},
-          {x: right.x, y: symbolRight.y - yOffset},
-          {x: symbolRight.x, y: symbolRight.y - yOffset},
-          {x: symbolRight.x, y: symbolRight.y}
-        ], text);
+        line = drawLine$1(
+          this.chart,
+          right,
+          [
+            { x: right.x, y: right.y - yOffset },
+            { x: right.x, y: symbolRight.y - yOffset },
+            { x: symbolRight.x, y: symbolRight.y - yOffset },
+            { x: symbolRight.x, y: symbolRight.y },
+          ],
+          text
+        );
       }
       this.leftLines.push(line);
       symbol.rightLines.push(line);
@@ -692,59 +786,84 @@
       maxX = symbolRight.x;
     } else if ((!origin || origin === 'right') && isOnSameColumn && isUpper) {
       yOffset = Math.max(symbol.topLines.length, this.rightLines.length) * 10;
-      line = drawLine$1(this.chart, right, [
-        {x: right.x + lineLength/2, y: right.y - yOffset},
-        {x: right.x + lineLength/2, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        right,
+        [
+          { x: right.x + lineLength / 2, y: right.y - yOffset },
+          { x: right.x + lineLength / 2, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y },
+        ],
+        text
+      );
       this.rightLines.push(line);
       symbol.topLines.push(line);
       this.rightStart = true;
       symbol.topEnd = true;
-      maxX = right.x + lineLength/2;
+      maxX = right.x + lineLength / 2;
     } else if ((!origin || origin === 'right') && isOnSameColumn && isUnder) {
       yOffset = Math.max(symbol.topLines.length, this.rightLines.length) * 10;
-      line = drawLine$1(this.chart, right, [
-        {x: right.x + lineLength/2, y: right.y - yOffset},
-        {x: right.x + lineLength/2, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        right,
+        [
+          { x: right.x + lineLength / 2, y: right.y - yOffset },
+          { x: right.x + lineLength / 2, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y },
+        ],
+        text
+      );
       this.rightLines.push(line);
       symbol.topLines.push(line);
       this.rightStart = true;
       symbol.topEnd = true;
-      maxX = right.x + lineLength/2;
+      maxX = right.x + lineLength / 2;
     } else if ((!origin || origin === 'bottom') && isLeft) {
       yOffset = Math.max(symbol.topLines.length, this.bottomLines.length) * 10;
       if (this.leftEnd && isUpper) {
-        line = drawLine$1(this.chart, bottom, [
-          {x: bottom.x, y: bottom.y + lineLength/2 - yOffset},
-          {x: bottom.x + (bottom.x - symbolTop.x)/2, y: bottom.y + lineLength/2 - yOffset},
-          {x: bottom.x + (bottom.x - symbolTop.x)/2, y: symbolTop.y - lineLength/2 - yOffset},
-          {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-          {x: symbolTop.x, y: symbolTop.y}
-        ], text);
+        line = drawLine$1(
+          this.chart,
+          bottom,
+          [
+            { x: bottom.x, y: bottom.y + lineLength / 2 - yOffset },
+            { x: bottom.x + (bottom.x - symbolTop.x) / 2, y: bottom.y + lineLength / 2 - yOffset },
+            { x: bottom.x + (bottom.x - symbolTop.x) / 2, y: symbolTop.y - lineLength / 2 - yOffset },
+            { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+            { x: symbolTop.x, y: symbolTop.y },
+          ],
+          text
+        );
       } else {
-        line = drawLine$1(this.chart, bottom, [
-          {x: bottom.x, y: symbolTop.y - lineLength/2 - yOffset},
-          {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-          {x: symbolTop.x, y: symbolTop.y}
-        ], text);
+        line = drawLine$1(
+          this.chart,
+          bottom,
+          [
+            { x: bottom.x, y: symbolTop.y - lineLength / 2 - yOffset },
+            { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+            { x: symbolTop.x, y: symbolTop.y },
+          ],
+          text
+        );
       }
       this.bottomLines.push(line);
       symbol.topLines.push(line);
       this.bottomStart = true;
       symbol.topEnd = true;
-      maxX = bottom.x + (bottom.x - symbolTop.x)/2;
+      maxX = bottom.x + (bottom.x - symbolTop.x) / 2;
     } else if ((!origin || origin === 'bottom') && isRight && isUnder) {
       yOffset = Math.max(symbol.topLines.length, this.bottomLines.length) * 10;
-      line = drawLine$1(this.chart, bottom, [
-        {x: bottom.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        bottom,
+        [
+          { x: bottom.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y },
+        ],
+        text
+      );
       this.bottomLines.push(line);
       symbol.topLines.push(line);
       this.bottomStart = true;
@@ -753,93 +872,128 @@
       if (symbolTop.x > maxX) maxX = symbolTop.x;
     } else if ((!origin || origin === 'bottom') && isRight) {
       yOffset = Math.max(symbol.topLines.length, this.bottomLines.length) * 10;
-      line = drawLine$1(this.chart, bottom, [
-        {x: bottom.x, y: bottom.y + lineLength/2 - yOffset},
-        {x: bottom.x + (bottom.x - symbolTop.x)/2, y: bottom.y + lineLength/2 - yOffset},
-        {x: bottom.x + (bottom.x - symbolTop.x)/2, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        bottom,
+        [
+          { x: bottom.x, y: bottom.y + lineLength / 2 - yOffset },
+          { x: bottom.x + (bottom.x - symbolTop.x) / 2, y: bottom.y + lineLength / 2 - yOffset },
+          { x: bottom.x + (bottom.x - symbolTop.x) / 2, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y },
+        ],
+        text
+      );
       this.bottomLines.push(line);
       symbol.topLines.push(line);
       this.bottomStart = true;
       symbol.topEnd = true;
-      maxX = bottom.x + (bottom.x - symbolTop.x)/2;
-    } else if ((origin && origin === 'right') && isLeft) {
+      maxX = bottom.x + (bottom.x - symbolTop.x) / 2;
+    } else if (origin && origin === 'right' && isLeft) {
       yOffset = Math.max(symbol.topLines.length, this.rightLines.length) * 10;
-      line = drawLine$1(this.chart, right, [
-        {x: right.x + lineLength/2, y: right.y},
-        {x: right.x + lineLength/2, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        right,
+        [
+          { x: right.x + lineLength / 2, y: right.y },
+          { x: right.x + lineLength / 2, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y },
+        ],
+        text
+      );
       this.rightLines.push(line);
       symbol.topLines.push(line);
       this.rightStart = true;
       symbol.topEnd = true;
-      maxX = right.x + lineLength/2;
-    } else if ((origin && origin === 'right') && isRight) {
+      maxX = right.x + lineLength / 2;
+    } else if (origin && origin === 'right' && isRight) {
       yOffset = Math.max(symbol.topLines.length, this.rightLines.length) * 10;
-      line = drawLine$1(this.chart, right, [
-        {x: symbolTop.x, y: right.y - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - yOffset}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        right,
+        [
+          { x: symbolTop.x, y: right.y - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - yOffset },
+        ],
+        text
+      );
       this.rightLines.push(line);
       symbol.topLines.push(line);
       this.rightStart = true;
       symbol.topEnd = true;
-      maxX = right.x + lineLength/2;
-    } else if ((origin && origin === 'bottom') && isOnSameColumn && isUpper) {
+      maxX = right.x + lineLength / 2;
+    } else if (origin && origin === 'bottom' && isOnSameColumn && isUpper) {
       yOffset = Math.max(symbol.topLines.length, this.bottomLines.length) * 10;
-      line = drawLine$1(this.chart, bottom, [
-        {x: bottom.x, y: bottom.y + lineLength/2 - yOffset},
-        {x: right.x + lineLength/2, y: bottom.y + lineLength/2 - yOffset},
-        {x: right.x + lineLength/2, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        bottom,
+        [
+          { x: bottom.x, y: bottom.y + lineLength / 2 - yOffset },
+          { x: right.x + lineLength / 2, y: bottom.y + lineLength / 2 - yOffset },
+          { x: right.x + lineLength / 2, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y },
+        ],
+        text
+      );
       this.bottomLines.push(line);
       symbol.topLines.push(line);
       this.bottomStart = true;
       symbol.topEnd = true;
-      maxX = bottom.x + lineLength/2;
-    } else if ((origin === 'left') && isOnSameColumn && isUpper) {
-      var diffX = left.x - lineLength/2;
+      maxX = bottom.x + lineLength / 2;
+    } else if (origin === 'left' && isOnSameColumn && isUpper) {
+      var diffX = left.x - lineLength / 2;
       if (symbolLeft.x < left.x) {
-        diffX = symbolLeft.x - lineLength/2;
+        diffX = symbolLeft.x - lineLength / 2;
       }
       yOffset = Math.max(symbol.topLines.length, this.leftLines.length) * 10;
-      line = drawLine$1(this.chart, left, [
-        {x: diffX, y: left.y - yOffset},
-        {x: diffX, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        left,
+        [
+          { x: diffX, y: left.y - yOffset },
+          { x: diffX, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y },
+        ],
+        text
+      );
       this.leftLines.push(line);
       symbol.topLines.push(line);
       this.leftStart = true;
       symbol.topEnd = true;
       maxX = left.x;
-    } else if ((origin === 'left')) {
+    } else if (origin === 'left') {
       yOffset = Math.max(symbol.topLines.length, this.leftLines.length) * 10;
-      line = drawLine$1(this.chart, left, [
-        {x: symbolTop.x + (left.x - symbolTop.x)/2, y: left.y},
-        {x: symbolTop.x + (left.x - symbolTop.x)/2, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        left,
+        [
+          { x: symbolTop.x + (left.x - symbolTop.x) / 2, y: left.y },
+          { x: symbolTop.x + (left.x - symbolTop.x) / 2, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y },
+        ],
+        text
+      );
       this.leftLines.push(line);
       symbol.topLines.push(line);
       this.leftStart = true;
       symbol.topEnd = true;
       maxX = left.x;
-    } else if ((origin === 'top')) {
+    } else if (origin === 'top') {
       yOffset = Math.max(symbol.topLines.length, this.topLines.length) * 10;
-      line = drawLine$1(this.chart, top, [
-        {x: top.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y - lineLength/2 - yOffset},
-        {x: symbolTop.x, y: symbolTop.y}
-      ], text);
+      line = drawLine$1(
+        this.chart,
+        top,
+        [
+          { x: top.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y - lineLength / 2 - yOffset },
+          { x: symbolTop.x, y: symbolTop.y },
+        ],
+        text
+      );
       this.topLines.push(line);
       symbol.topLines.push(line);
       this.topStart = true;
@@ -848,7 +1002,7 @@
     }
 
     //update line style
-    if (this.lineStyle[symbol.key] && line){
+    if (this.lineStyle[symbol.key] && line) {
       line.attr(this.lineStyle[symbol.key]);
     }
 
@@ -857,7 +1011,7 @@
         var otherLine = this.chart.lines[l];
 
         var ePath = otherLine.attr('path'),
-            lPath = line.attr('path');
+          lPath = line.attr('path');
 
         for (var iP = 0, lenP = ePath.length - 1; iP < lenP; iP++) {
           var newPath = [];
@@ -879,21 +1033,45 @@
             var line2_to_x = newLinePath[1][1];
             var line2_to_y = newLinePath[1][2];
 
-            var res = checkLineIntersection$1(line1_from_x, line1_from_y, line1_to_x, line1_to_y, line2_from_x, line2_from_y, line2_to_x, line2_to_y);
+            var res = checkLineIntersection$1(
+              line1_from_x,
+              line1_from_y,
+              line1_to_x,
+              line1_to_y,
+              line2_from_x,
+              line2_from_y,
+              line2_to_x,
+              line2_to_y
+            );
             if (res.onLine1 && res.onLine2) {
-
               var newSegment;
               if (line2_from_y === line2_to_y) {
                 if (line2_from_x > line2_to_x) {
-                  newSegment = ['L', res.x + lineWith * 2,  line2_from_y];
+                  newSegment = ['L', res.x + lineWith * 2, line2_from_y];
                   lPath.splice(lP + 1, 0, newSegment);
-                  newSegment = ['C', res.x + lineWith * 2,  line2_from_y, res.x, line2_from_y - lineWith * 4, res.x - lineWith * 2, line2_from_y];
+                  newSegment = [
+                    'C',
+                    res.x + lineWith * 2,
+                    line2_from_y,
+                    res.x,
+                    line2_from_y - lineWith * 4,
+                    res.x - lineWith * 2,
+                    line2_from_y,
+                  ];
                   lPath.splice(lP + 2, 0, newSegment);
                   line.attr('path', lPath);
                 } else {
-                  newSegment = ['L', res.x - lineWith * 2,  line2_from_y];
+                  newSegment = ['L', res.x - lineWith * 2, line2_from_y];
                   lPath.splice(lP + 1, 0, newSegment);
-                  newSegment = ['C', res.x - lineWith * 2,  line2_from_y, res.x, line2_from_y - lineWith * 4, res.x + lineWith * 2, line2_from_y];
+                  newSegment = [
+                    'C',
+                    res.x - lineWith * 2,
+                    line2_from_y,
+                    res.x,
+                    line2_from_y - lineWith * 4,
+                    res.x + lineWith * 2,
+                    line2_from_y,
+                  ];
                   lPath.splice(lP + 2, 0, newSegment);
                   line.attr('path', lPath);
                 }
@@ -901,13 +1079,29 @@
                 if (line2_from_y > line2_to_y) {
                   newSegment = ['L', line2_from_x, res.y + lineWith * 2];
                   lPath.splice(lP + 1, 0, newSegment);
-                  newSegment = ['C', line2_from_x, res.y + lineWith * 2, line2_from_x + lineWith * 4, res.y, line2_from_x, res.y - lineWith * 2];
+                  newSegment = [
+                    'C',
+                    line2_from_x,
+                    res.y + lineWith * 2,
+                    line2_from_x + lineWith * 4,
+                    res.y,
+                    line2_from_x,
+                    res.y - lineWith * 2,
+                  ];
                   lPath.splice(lP + 2, 0, newSegment);
                   line.attr('path', lPath);
                 } else {
                   newSegment = ['L', line2_from_x, res.y - lineWith * 2];
                   lPath.splice(lP + 1, 0, newSegment);
-                  newSegment = ['C', line2_from_x, res.y - lineWith * 2, line2_from_x + lineWith * 4, res.y, line2_from_x, res.y + lineWith * 2];
+                  newSegment = [
+                    'C',
+                    line2_from_x,
+                    res.y - lineWith * 2,
+                    line2_from_x + lineWith * 4,
+                    res.y,
+                    line2_from_x,
+                    res.y + lineWith * 2,
+                  ];
                   lPath.splice(lP + 2, 0, newSegment);
                   line.attr('path', lPath);
                 }
@@ -928,6 +1122,42 @@
     if (!this.chart.maxXFromLine || (this.chart.maxXFromLine && maxX > this.chart.maxXFromLine)) {
       this.chart.maxXFromLine = maxX;
     }
+  };
+
+  Symbol.prototype.initPath = function (chart, options) {
+    this.textMargin = this.getAttr('text-margin');
+    var width = this.text.getBBox().width + 2 * this.textMargin;
+    var height = this.text.getBBox().height + 2 * this.textMargin;
+    const ratio = { x: width, y: height };
+    const pathVal = util_excalibur$1.calcPath({
+      type: this.symbolType,
+      ratio,
+    });
+    var symbol = chart.paper.path(pathVal);
+    symbol.attr({
+      stroke: this.getAttr('element-color'),
+      'stroke-width': this.getAttr('line-width'),
+      fill: this.getAttr('fill'),
+    });
+    if (options.link) {
+      symbol.attr('href', options.link);
+    }
+    if (options.target) {
+      symbol.attr('target', options.target);
+    }
+    if (options.key) {
+      symbol.node.id = options.key;
+    }
+    symbol.node.setAttribute('class', this.getAttr('class'));
+
+    this.text.attr({
+      y: symbol.getBBox().height / 2,
+    });
+
+    this.group.push(symbol);
+    symbol.insertBefore(this.text);
+
+    this.initialize();
   };
 
   var flowchart_symbol = Symbol;
@@ -1491,10 +1721,10 @@
   var inherits$2 = flowchart_helpers.inherits;
 
   function Start(chart, options) {
-    var symbol = chart.paper.rect(0, 0, 0, 0, 20);
     options = options || {};
     options.text = options.text || 'Start';
-    flowchart_symbol.call(this, chart, options, symbol);
+    flowchart_symbol.call(this, chart, options);
+    this.initPath.call(this, chart, options);
   }
   inherits$2(Start, flowchart_symbol);
 
