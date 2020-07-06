@@ -1,4 +1,6 @@
-[![JS.ORG](https://img.shields.io/badge/js.org-flowchart-ffb400.svg?style=flat-square)](http://js.org)
+**WIP**
+
+forked from [adrai/flowchart.js](http://flowchart.js.org)，add handscript-like charts.
 
 # [flowchart.js](http://flowchart.js.org)
 
