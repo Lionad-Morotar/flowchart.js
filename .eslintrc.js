@@ -1,5 +1,6 @@
 module.exports = {
   env: {
+    amd: true,
     browser: true,
     commonjs: true,
     es2020: true,
