@@ -5,7 +5,6 @@ function End(chart, options) {
   options = options || {};
   options.text = options.text || 'End';
   Symbol.call(this, chart, options);
-  this.initPath.call(this, chart, options);
 }
 inherits(End, Symbol);
 

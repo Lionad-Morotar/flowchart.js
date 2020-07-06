@@ -2,86 +2,147 @@ var Symbol = require('./flowchart.symbol');
 var inherits = require('./flowchart.helpers').inherits;
 
 function Parallel(chart, options) {
-  var symbol = chart.paper.rect(0, 0, 0, 0);
   options = options || {};
-  Symbol.call(this, chart, options, symbol);
-  this.textMargin = this.getAttr('text-margin');
-  this.path1_direction = 'bottom';
-  this.path2_direction = 'right';
-  this.path3_direction = 'top';
-  this.params = options.params;
-  if (options.direction_next === 'path1' && !options[options.direction_next] && options.next) {
-    options[options.direction_next] = options.next;
-  }
-  if (options.direction_next === 'path2' && !options[options.direction_next] && options.next) {
-    options[options.direction_next] = options.next;
-  }
-  if (options.direction_next === 'path3' && !options[options.direction_next] && options.next) {
-    options[options.direction_next] = options.next;
-  }
-
-  if (options.path1 && options.direction_path1 && options.path2 && !options.direction_path2 && options.path3 && !options.direction_path3) {
-    if (options.direction_path1 === 'right') {
-      this.path2_direction = 'bottom';
-      this.path1_direction = 'right';
-      this.path3_direction = 'top';
-    } else if (options.direction_path1 === 'top') {
-      this.path2_direction = 'right';
-      this.path1_direction = 'top';
-      this.path3_direction = 'bottom';
-    } else if (options.direction_path1 === 'left') {
-      this.path2_direction = 'right';
-      this.path1_direction = 'left';
-      this.path3_direction = 'bottom';
-    } else {
-      this.path2_direction = 'right';
-      this.path1_direction = 'bottom';
-      this.path3_direction = 'top';
+  Symbol.call(this, chart, options, () => {
+    this.textMargin = this.getAttr('text-margin');
+    this.path1_direction = 'bottom';
+    this.path2_direction = 'right';
+    this.path3_direction = 'top';
+    this.params = options.params;
+    if (options.direction_next === 'path1' && !options[options.direction_next] && options.next) {
+      options[options.direction_next] = options.next;
     }
-  } else if (options.path1 && !options.direction_path1 && options.path2 && options.direction_path2 && options.path3 && !options.direction_path3) {
-    if (options.direction_path2 === 'right') {
-      this.path1_direction = 'bottom';
-      this.path2_direction = 'right';
-      this.path3_direction = 'top';
-    } else if (options.direction_path2 === 'left') {
-      this.path1_direction = 'bottom';
-      this.path2_direction = 'left';
-      this.path3_direction = 'right';
-    } else {
-      this.path1_direction = 'right';
-      this.path2_direction = 'bottom';
-      this.path3_direction = 'top';
+    if (options.direction_next === 'path2' && !options[options.direction_next] && options.next) {
+      options[options.direction_next] = options.next;
     }
-  } else if (options.path1 && !options.direction_path1 && options.path2 && !options.direction_path2 && options.path3 && options.direction_path3) {
-    if (options.direction_path2 === 'right') {
-      this.path1_direction = 'bottom';
-      this.path2_direction = 'top';
-      this.path3_direction = 'right';
-    } else if (options.direction_path2 === 'left') {
-      this.path1_direction = 'bottom';
-      this.path2_direction = 'right';
-      this.path3_direction = 'left';
-    } else {
-      this.path1_direction = 'right';
-      this.path2_direction = 'bottom';
-      this.path3_direction = 'top';
+    if (options.direction_next === 'path3' && !options[options.direction_next] && options.next) {
+      options[options.direction_next] = options.next;
     }
-  } else {
-    this.path1_direction = options.direction_path1;
-    this.path2_direction = options.direction_path2;
-    this.path3_direction = options.direction_path3;
-  }
 
-  this.path1_direction = this.path1_direction || 'bottom';
-  this.path2_direction = this.path2_direction || 'right';
-  this.path3_direction = this.path3_direction || 'top';
+    if (
+      options.path1 &&
+      options.direction_path1 &&
+      options.path2 &&
+      !options.direction_path2 &&
+      options.path3 &&
+      !options.direction_path3
+    ) {
+      if (options.direction_path1 === 'right') {
+        this.path2_direction = 'bottom';
+        this.path1_direction = 'right';
+        this.path3_direction = 'top';
+      } else if (options.direction_path1 === 'top') {
+        this.path2_direction = 'right';
+        this.path1_direction = 'top';
+        this.path3_direction = 'bottom';
+      } else if (options.direction_path1 === 'left') {
+        this.path2_direction = 'right';
+        this.path1_direction = 'left';
+        this.path3_direction = 'bottom';
+      } else {
+        this.path2_direction = 'right';
+        this.path1_direction = 'bottom';
+        this.path3_direction = 'top';
+      }
+    } else if (
+      options.path1 &&
+      !options.direction_path1 &&
+      options.path2 &&
+      options.direction_path2 &&
+      options.path3 &&
+      !options.direction_path3
+    ) {
+      if (options.direction_path2 === 'right') {
+        this.path1_direction = 'bottom';
+        this.path2_direction = 'right';
+        this.path3_direction = 'top';
+      } else if (options.direction_path2 === 'left') {
+        this.path1_direction = 'bottom';
+        this.path2_direction = 'left';
+        this.path3_direction = 'right';
+      } else {
+        this.path1_direction = 'right';
+        this.path2_direction = 'bottom';
+        this.path3_direction = 'top';
+      }
+    } else if (
+      options.path1 &&
+      !options.direction_path1 &&
+      options.path2 &&
+      !options.direction_path2 &&
+      options.path3 &&
+      options.direction_path3
+    ) {
+      if (options.direction_path2 === 'right') {
+        this.path1_direction = 'bottom';
+        this.path2_direction = 'top';
+        this.path3_direction = 'right';
+      } else if (options.direction_path2 === 'left') {
+        this.path1_direction = 'bottom';
+        this.path2_direction = 'right';
+        this.path3_direction = 'left';
+      } else {
+        this.path1_direction = 'right';
+        this.path2_direction = 'bottom';
+        this.path3_direction = 'top';
+      }
+    } else {
+      this.path1_direction = options.direction_path1;
+      this.path2_direction = options.direction_path2;
+      this.path3_direction = options.direction_path3;
+    }
 
-  this.initialize();
+    this.path1_direction = this.path1_direction || 'bottom';
+    this.path2_direction = this.path2_direction || 'right';
+    this.path3_direction = this.path3_direction || 'top';
+
+    var symbol = chart.paper.rect(0, 0, 0, 0);
+    symbol.attr({
+      fill: this.getAttr('fill'),
+      stroke: this.getAttr('element-color'),
+      'stroke-width': this.getAttr('line-width'),
+      width: this.text.getBBox().width + 2 * this.textMargin,
+      height: this.text.getBBox().height + 2 * this.textMargin,
+    });
+
+    symbol.node.setAttribute('class', this.getAttr('class'));
+
+    if (options.link) {
+      symbol.attr('href', options.link);
+    }
+    if (options.target) {
+      symbol.attr('target', options.target);
+    }
+
+    //ndrqu Add click function with event and options params
+    if (options.function) {
+      symbol.node.addEventListener(
+        'click',
+        function (evt) {
+          window[options.function](evt, options);
+        },
+        false
+      );
+      symbol.attr({ cursor: 'pointer' });
+    }
+    if (options.key) {
+      symbol.node.id = options.key;
+    }
+
+    this.symbol = symbol;
+    this.group.push(symbol);
+    symbol.insertBefore(this.text);
+
+    this.text.attr({
+      y: symbol.getBBox().height / 2,
+    });
+
+    this.initialize();
+  });
 }
 inherits(Parallel, Symbol);
 
-Parallel.prototype.render = function() {
-
+Parallel.prototype.render = function () {
   if (this.path1_direction) {
     this[this.path1_direction + '_symbol'] = this.path1_symbol;
   }
@@ -160,7 +221,7 @@ Parallel.prototype.render = function() {
     var rightPoint = this.getRight();
 
     if (!this.right_symbol.isPositioned) {
-      this.right_symbol.setY(rightPoint.y - this.right_symbol.height / 2);
+      this.right_symbol.setY(rightPoint.y + this.right_symbol.height / 2);
       this.right_symbol.shiftX(this.group.getBBox().x + this.width + lineLength);
       (function shift() {
         var hasSymbolUnder = false;
@@ -191,7 +252,7 @@ Parallel.prototype.render = function() {
   }
 };
 
-Parallel.prototype.renderLines = function() {
+Parallel.prototype.renderLines = function () {
   if (this.path1_symbol) {
     this.drawLineTo(this.path1_symbol, '', this.path1_direction);
   }

@@ -189,7 +189,7 @@
   const typeDataMap = {
     start: rectData,
     end: rectData,
-    // operation: rectData,
+    operation: rectData,
   };
 
   function splitNum(str) {
@@ -405,10 +405,9 @@
   var drawLine$1 = flowchart_functions.drawLine;
   var checkLineIntersection$1 = flowchart_functions.checkLineIntersection;
 
-  function Symbol(chart, options, symbol) {
+  function Symbol(chart, options, symbolFn) {
     this.chart = chart;
     this.group = this.chart.paper.set();
-    this.symbol = symbol;
     this.connectedTo = [];
     this.symbolType = options.symbolType;
     this.flowstate = options.flowstate || 'future';
@@ -421,112 +420,9 @@
 
     this.next_direction = options.next && options['direction_next'] ? options['direction_next'] : undefined;
 
-    this.text = this.chart.paper.text(0, 0, options.text);
-    //Raphael does not support the svg group tag so setting the text node id to the symbol node id plus t
-    if (options.key) {
-      this.text.node.id = options.key + 't';
-    }
-    this.text.node.setAttribute('class', this.getAttr('class') + 't');
-
-    this.text.attr({
-      'text-anchor': 'start',
-      x: this.getAttr('text-margin'),
-      fill: this.getAttr('font-color'),
-      'font-size': this.getAttr('font-size'),
-    });
-
-    var font = this.getAttr('font');
-    var fontF = this.getAttr('font-family');
-    var fontW = this.getAttr('font-weight');
-
-    if (font) this.text.attr({ font: font });
-    if (fontF) this.text.attr({ 'font-family': fontF });
-    if (fontW) this.text.attr({ 'font-weight': fontW });
-
-    if (options.link) {
-      this.text.attr('href', options.link);
-    }
-
-    //ndrqu Add click function with event and options params
-    if (options.function) {
-      this.text.attr({ cursor: 'pointer' });
-
-      this.text.node.addEventListener(
-        'click',
-        function (evt) {
-          window[options.function](evt, options);
-        },
-        false
-      );
-    }
-
-    if (options.target) {
-      this.text.attr('target', options.target);
-    }
-
-    var maxWidth = this.getAttr('maxWidth');
-    if (maxWidth) {
-      // using this approach: http://stackoverflow.com/a/3153457/22466
-      var words = options.text.split(' ');
-      var tempText = '';
-      for (var i = 0, ii = words.length; i < ii; i++) {
-        var word = words[i];
-        this.text.attr('text', tempText + ' ' + word);
-        if (this.text.getBBox().width > maxWidth) {
-          tempText += '\n' + word;
-        } else {
-          tempText += ' ' + word;
-        }
-      }
-      this.text.attr('text', tempText.substring(1));
-    }
-
-    this.group.push(this.text);
-
-    if (symbol) {
-      var tmpMargin = this.getAttr('text-margin');
-
-      symbol.attr({
-        fill: this.getAttr('fill'),
-        stroke: this.getAttr('element-color'),
-        'stroke-width': this.getAttr('line-width'),
-        width: this.text.getBBox().width + 2 * tmpMargin,
-        height: this.text.getBBox().height + 2 * tmpMargin,
-      });
-
-      symbol.node.setAttribute('class', this.getAttr('class'));
-
-      if (options.link) {
-        symbol.attr('href', options.link);
-      }
-      if (options.target) {
-        symbol.attr('target', options.target);
-      }
-
-      //ndrqu Add click function with event and options params
-      if (options.function) {
-        symbol.node.addEventListener(
-          'click',
-          function (evt) {
-            window[options.function](evt, options);
-          },
-          false
-        );
-        symbol.attr({ cursor: 'pointer' });
-      }
-      if (options.key) {
-        symbol.node.id = options.key;
-      }
-
-      this.group.push(symbol);
-      symbol.insertBefore(this.text);
-
-      this.text.attr({
-        y: symbol.getBBox().height / 2,
-      });
-
-      this.initialize();
-    }
+    this.initText(chart, options);
+    // console.log(this.symbolType);
+    symbolFn ? symbolFn() : this.initSymbol(chart, options);
   }
 
   /* Gets the attribute based on Flowstate, Symbol-Name and default, first found wins */
@@ -1128,40 +1024,120 @@
     }
   };
 
-  Symbol.prototype.initPath = function (chart, options) {
+  Symbol.prototype.initText = function (chart, options) {
+    this.text = this.chart.paper.text(0, 0, options.text);
+    //Raphael does not support the svg group tag so setting the text node id to the symbol node id plus t
+    if (options.key) {
+      this.text.node.id = options.key + 't';
+    }
+    this.text.node.setAttribute('class', this.getAttr('class') + 't');
+
+    this.text.attr({
+      'text-anchor': 'start',
+      x: this.getAttr('text-margin'),
+      fill: this.getAttr('font-color'),
+      'font-size': this.getAttr('font-size'),
+    });
+
+    var font = this.getAttr('font');
+    var fontF = this.getAttr('font-family');
+    var fontW = this.getAttr('font-weight');
+
+    if (font) this.text.attr({ font: font });
+    if (fontF) this.text.attr({ 'font-family': fontF });
+    if (fontW) this.text.attr({ 'font-weight': fontW });
+
+    if (options.link) {
+      this.text.attr('href', options.link);
+    }
+
+    //ndrqu Add click function with event and options params
+    if (options.function) {
+      this.text.attr({ cursor: 'pointer' });
+
+      this.text.node.addEventListener(
+        'click',
+        function (evt) {
+          window[options.function](evt, options);
+        },
+        false
+      );
+    }
+
+    if (options.target) {
+      this.text.attr('target', options.target);
+    }
+
+    var maxWidth = this.getAttr('maxWidth');
+    if (maxWidth) {
+      // using this approach: http://stackoverflow.com/a/3153457/22466
+      var words = options.text.split(' ');
+      var tempText = '';
+      for (var i = 0, ii = words.length; i < ii; i++) {
+        var word = words[i];
+        this.text.attr('text', tempText + ' ' + word);
+        if (this.text.getBBox().width > maxWidth) {
+          tempText += '\n' + word;
+        } else {
+          tempText += ' ' + word;
+        }
+      }
+      this.text.attr('text', tempText.substring(1));
+    }
+
+    this.group.push(this.text);
+  };
+
+  Symbol.prototype.initSymbol = function (chart, options) {
     this.textMargin = this.getAttr('text-margin');
-    var width = this.text.getBBox().width + 2 * this.textMargin;
-    var height = this.text.getBBox().height + 2 * this.textMargin;
+    const width = this.text.getBBox().width + 2 * this.textMargin;
+    const height = this.text.getBBox().height + 2 * this.textMargin;
     const ratio = { x: width, y: height };
     const pathVal = util_excalibur$1.calcPath({
       type: this.symbolType,
       ratio,
     });
-    var symbol = chart.paper.path(pathVal);
+    const symbol = chart.paper.path(pathVal);
+
     symbol.attr({
+      fill: this.getAttr('fill'),
       stroke: this.getAttr('element-color'),
       'stroke-width': this.getAttr('line-width'),
-      fill: this.getAttr('fill'),
     });
+
+    symbol.node.setAttribute('class', this.getAttr('class'));
+
     if (options.link) {
       symbol.attr('href', options.link);
     }
     if (options.target) {
       symbol.attr('target', options.target);
     }
+    if (options.function) {
+      symbol.node.addEventListener(
+        'click',
+        function (evt) {
+          window[options.function](evt, options);
+        },
+        false
+      );
+      symbol.attr({ cursor: 'pointer' });
+    }
     if (options.key) {
       symbol.node.id = options.key;
     }
-    symbol.node.setAttribute('class', this.getAttr('class'));
+
+    this.symbol = symbol;
+    this.group.push(symbol);
+    symbol.insertBefore(this.text);
 
     this.text.attr({
       y: symbol.getBBox().height / 2,
     });
 
-    this.group.push(symbol);
-    symbol.insertBefore(this.text);
-
     this.initialize();
+
+    return this.symbol;
   };
 
   var flowchart_symbol = Symbol;
@@ -1172,99 +1148,123 @@
 
   function Condition(chart, options) {
     options = options || {};
-    flowchart_symbol.call(this, chart, options);
-    this.textMargin = this.getAttr('text-margin');
-    this.yes_direction = 'bottom';
-    this.no_direction = 'right';
-    this.params = options.params;
-    if (options.yes && options.direction_yes && options.no && !options.direction_no) {
-      if (options.direction_yes === 'right') {
-        this.no_direction = 'bottom';
-        this.yes_direction = 'right';
-      } else if (options.direction_yes === 'top') {
-        this.no_direction = 'right';
-        this.yes_direction = 'top';
-      } else {
-        this.no_direction = 'right';
-        this.yes_direction = 'bottom';
-      }
-    } else if (options.yes && !options.direction_yes && options.no && options.direction_no) {
-      if (options.direction_no === 'right') {
-        this.yes_direction = 'bottom';
-        this.no_direction = 'right';
-      } else {
-        this.yes_direction = 'right';
-        this.no_direction = 'bottom';
-      }
-    } else if (options.yes && options.direction_yes && options.no && options.direction_no && options.direction_no !== options.direction_yes) {
-      if (options.direction_yes === 'right') {
-        this.no_direction = 'bottom';
-        this.yes_direction = 'right';
-      } else if (options.direction_yes === 'top') {
-        this.no_direction = 'right';
-        this.yes_direction = 'top';
-      } else {
-        this.no_direction = 'right';
-        this.yes_direction = 'bottom';
-      }
-    } else {
+    flowchart_symbol.call(this, chart, options, () => {
       this.yes_direction = 'bottom';
       this.no_direction = 'right';
-    }
+      this.params = options.params;
+      if (options.yes && options.direction_yes && options.no && !options.direction_no) {
+        if (options.direction_yes === 'right') {
+          this.no_direction = 'bottom';
+          this.yes_direction = 'right';
+        } else if (options.direction_yes === 'top') {
+          this.no_direction = 'right';
+          this.yes_direction = 'top';
+        } else {
+          this.no_direction = 'right';
+          this.yes_direction = 'bottom';
+        }
+      } else if (options.yes && !options.direction_yes && options.no && options.direction_no) {
+        if (options.direction_no === 'right') {
+          this.yes_direction = 'bottom';
+          this.no_direction = 'right';
+        } else {
+          this.yes_direction = 'right';
+          this.no_direction = 'bottom';
+        }
+      } else if (
+        options.yes &&
+        options.direction_yes &&
+        options.no &&
+        options.direction_no &&
+        options.direction_no !== options.direction_yes
+      ) {
+        if (options.direction_yes === 'right') {
+          this.no_direction = 'bottom';
+          this.yes_direction = 'right';
+        } else if (options.direction_yes === 'top') {
+          this.no_direction = 'right';
+          this.yes_direction = 'top';
+        } else {
+          this.no_direction = 'right';
+          this.yes_direction = 'bottom';
+        }
+      } else {
+        this.yes_direction = 'bottom';
+        this.no_direction = 'right';
+      }
 
-    this.yes_direction = this.yes_direction || 'bottom';
-    this.no_direction = this.no_direction || 'right';
+      this.yes_direction = this.yes_direction || 'bottom';
+      this.no_direction = this.no_direction || 'right';
 
-    this.text.attr({
-      x: this.textMargin * 2
+      this.textMargin = this.getAttr('text-margin');
+
+      var width = this.text.getBBox().width + 3 * this.textMargin;
+      width += width / 2;
+      var height = this.text.getBBox().height + 2 * this.textMargin;
+      height += height / 2;
+
+      var startX = width / 4;
+      var startY = height / 4;
+
+      this.text.attr({
+        x: startX + this.textMargin / 2,
+      });
+
+      var start = { x: startX, y: startY };
+      var points = [
+        { x: startX - width / 4, y: startY + height / 4 },
+        { x: startX - width / 4 + width / 2, y: startY + height / 4 + height / 2 },
+        { x: startX - width / 4 + width, y: startY + height / 4 },
+        { x: startX - width / 4 + width / 2, y: startY + height / 4 - height / 2 },
+        { x: startX - width / 4, y: startY + height / 4 },
+      ];
+
+      const symbol = drawPath$1(chart, start, points);
+
+      symbol.attr({
+        fill: this.getAttr('fill'),
+        stroke: this.getAttr('element-color'),
+        'stroke-width': this.getAttr('line-width'),
+      });
+
+      symbol.node.setAttribute('class', this.getAttr('class'));
+
+      if (options.link) {
+        symbol.attr('href', options.link);
+      }
+      if (options.target) {
+        symbol.attr('target', options.target);
+      }
+
+      //ndrqu Add click function with event and options params
+      if (options.function) {
+        symbol.node.addEventListener(
+          'click',
+          function (evt) {
+            window[options.function](evt, options);
+          },
+          false
+        );
+        symbol.attr({ cursor: 'pointer' });
+      }
+      if (options.key) {
+        symbol.node.id = options.key;
+      }
+
+      this.symbol = symbol;
+      this.group.push(symbol);
+      symbol.insertBefore(this.text);
+
+      this.text.attr({
+        y: symbol.getBBox().height / 2,
+      });
+
+      this.initialize();
     });
-
-    var width = this.text.getBBox().width + 3 * this.textMargin;
-    width += width/2;
-    var height = this.text.getBBox().height + 2 * this.textMargin;
-    height += height/2;
-    height = Math.max(width * 0.5, height);
-    var startX = width/4;
-    var startY = height/4;
-
-    this.text.attr({
-      x: startX + this.textMargin/2
-    });
-
-    var start = {x: startX, y: startY};
-    var points = [
-      {x: startX - width/4, y: startY + height/4},
-      {x: startX - width/4 + width/2, y: startY + height/4 + height/2},
-      {x: startX - width/4 + width, y: startY + height/4},
-      {x: startX - width/4 + width/2, y: startY + height/4 - height/2},
-      {x: startX - width/4, y: startY + height/4}
-    ];
-
-    var symbol = drawPath$1(chart, start, points);
-
-    symbol.attr({
-      stroke: this.getAttr('element-color'),
-      'stroke-width': this.getAttr('line-width'),
-      fill: this.getAttr('fill')
-    });
-    if (options.link) { symbol.attr('href', options.link); }
-    if (options.target) { symbol.attr('target', options.target); }
-    if (options.key) { symbol.node.id = options.key; }
-    symbol.node.setAttribute('class', this.getAttr('class'));
-
-    this.text.attr({
-      y: symbol.getBBox().height/2
-    });
-
-    this.group.push(symbol);
-    symbol.insertBefore(this.text);
-
-    this.initialize();
   }
   inherits(Condition, flowchart_symbol);
 
-  Condition.prototype.render = function() {
-
+  Condition.prototype.render = function () {
     if (this.yes_direction) {
       this[this.yes_direction + '_symbol'] = this.yes_symbol;
     }
@@ -1280,7 +1280,7 @@
 
       if (!this.bottom_symbol.isPositioned) {
         this.bottom_symbol.shiftY(this.getY() + this.height + lineLength);
-        this.bottom_symbol.setX(bottomPoint.x - this.bottom_symbol.width/2);
+        this.bottom_symbol.setX(bottomPoint.x - this.bottom_symbol.width / 2);
         this.bottom_symbol.isPositioned = true;
 
         this.bottom_symbol.render();
@@ -1291,8 +1291,7 @@
       var rightPoint = this.getRight();
 
       if (!this.right_symbol.isPositioned) {
-
-        this.right_symbol.setY(rightPoint.y - this.right_symbol.height/2);
+        this.right_symbol.setY(rightPoint.y - this.right_symbol.height / 2);
         this.right_symbol.shiftX(this.group.getBBox().x + this.width + lineLength);
 
         var self = this;
@@ -1302,9 +1301,9 @@
           for (var i = 0, len = self.chart.symbols.length; i < len; i++) {
             symb = self.chart.symbols[i];
 
-            if (!self.params['align-next'] || self.params['align-next'] !== 'no') { 
+            if (!self.params['align-next'] || self.params['align-next'] !== 'no') {
               var diff = Math.abs(symb.getCenter().x - self.right_symbol.getCenter().x);
-              if (symb.getCenter().y > self.right_symbol.getCenter().y && diff <= self.right_symbol.width/2) {
+              if (symb.getCenter().y > self.right_symbol.getCenter().y && diff <= self.right_symbol.width / 2) {
                 hasSymbolUnder = true;
                 break;
               }
@@ -1325,7 +1324,7 @@
     }
   };
 
-  Condition.prototype.renderLines = function() {
+  Condition.prototype.renderLines = function () {
     if (this.yes_symbol) {
       this.drawLineTo(this.yes_symbol, this.getAttr('yes-text'), this.yes_direction);
     }
@@ -1340,86 +1339,147 @@
   var inherits$1 = flowchart_helpers.inherits;
 
   function Parallel(chart, options) {
-    var symbol = chart.paper.rect(0, 0, 0, 0);
     options = options || {};
-    flowchart_symbol.call(this, chart, options, symbol);
-    this.textMargin = this.getAttr('text-margin');
-    this.path1_direction = 'bottom';
-    this.path2_direction = 'right';
-    this.path3_direction = 'top';
-    this.params = options.params;
-    if (options.direction_next === 'path1' && !options[options.direction_next] && options.next) {
-      options[options.direction_next] = options.next;
-    }
-    if (options.direction_next === 'path2' && !options[options.direction_next] && options.next) {
-      options[options.direction_next] = options.next;
-    }
-    if (options.direction_next === 'path3' && !options[options.direction_next] && options.next) {
-      options[options.direction_next] = options.next;
-    }
-
-    if (options.path1 && options.direction_path1 && options.path2 && !options.direction_path2 && options.path3 && !options.direction_path3) {
-      if (options.direction_path1 === 'right') {
-        this.path2_direction = 'bottom';
-        this.path1_direction = 'right';
-        this.path3_direction = 'top';
-      } else if (options.direction_path1 === 'top') {
-        this.path2_direction = 'right';
-        this.path1_direction = 'top';
-        this.path3_direction = 'bottom';
-      } else if (options.direction_path1 === 'left') {
-        this.path2_direction = 'right';
-        this.path1_direction = 'left';
-        this.path3_direction = 'bottom';
-      } else {
-        this.path2_direction = 'right';
-        this.path1_direction = 'bottom';
-        this.path3_direction = 'top';
+    flowchart_symbol.call(this, chart, options, () => {
+      this.textMargin = this.getAttr('text-margin');
+      this.path1_direction = 'bottom';
+      this.path2_direction = 'right';
+      this.path3_direction = 'top';
+      this.params = options.params;
+      if (options.direction_next === 'path1' && !options[options.direction_next] && options.next) {
+        options[options.direction_next] = options.next;
       }
-    } else if (options.path1 && !options.direction_path1 && options.path2 && options.direction_path2 && options.path3 && !options.direction_path3) {
-      if (options.direction_path2 === 'right') {
-        this.path1_direction = 'bottom';
-        this.path2_direction = 'right';
-        this.path3_direction = 'top';
-      } else if (options.direction_path2 === 'left') {
-        this.path1_direction = 'bottom';
-        this.path2_direction = 'left';
-        this.path3_direction = 'right';
-      } else {
-        this.path1_direction = 'right';
-        this.path2_direction = 'bottom';
-        this.path3_direction = 'top';
+      if (options.direction_next === 'path2' && !options[options.direction_next] && options.next) {
+        options[options.direction_next] = options.next;
       }
-    } else if (options.path1 && !options.direction_path1 && options.path2 && !options.direction_path2 && options.path3 && options.direction_path3) {
-      if (options.direction_path2 === 'right') {
-        this.path1_direction = 'bottom';
-        this.path2_direction = 'top';
-        this.path3_direction = 'right';
-      } else if (options.direction_path2 === 'left') {
-        this.path1_direction = 'bottom';
-        this.path2_direction = 'right';
-        this.path3_direction = 'left';
-      } else {
-        this.path1_direction = 'right';
-        this.path2_direction = 'bottom';
-        this.path3_direction = 'top';
+      if (options.direction_next === 'path3' && !options[options.direction_next] && options.next) {
+        options[options.direction_next] = options.next;
       }
-    } else {
-      this.path1_direction = options.direction_path1;
-      this.path2_direction = options.direction_path2;
-      this.path3_direction = options.direction_path3;
-    }
 
-    this.path1_direction = this.path1_direction || 'bottom';
-    this.path2_direction = this.path2_direction || 'right';
-    this.path3_direction = this.path3_direction || 'top';
+      if (
+        options.path1 &&
+        options.direction_path1 &&
+        options.path2 &&
+        !options.direction_path2 &&
+        options.path3 &&
+        !options.direction_path3
+      ) {
+        if (options.direction_path1 === 'right') {
+          this.path2_direction = 'bottom';
+          this.path1_direction = 'right';
+          this.path3_direction = 'top';
+        } else if (options.direction_path1 === 'top') {
+          this.path2_direction = 'right';
+          this.path1_direction = 'top';
+          this.path3_direction = 'bottom';
+        } else if (options.direction_path1 === 'left') {
+          this.path2_direction = 'right';
+          this.path1_direction = 'left';
+          this.path3_direction = 'bottom';
+        } else {
+          this.path2_direction = 'right';
+          this.path1_direction = 'bottom';
+          this.path3_direction = 'top';
+        }
+      } else if (
+        options.path1 &&
+        !options.direction_path1 &&
+        options.path2 &&
+        options.direction_path2 &&
+        options.path3 &&
+        !options.direction_path3
+      ) {
+        if (options.direction_path2 === 'right') {
+          this.path1_direction = 'bottom';
+          this.path2_direction = 'right';
+          this.path3_direction = 'top';
+        } else if (options.direction_path2 === 'left') {
+          this.path1_direction = 'bottom';
+          this.path2_direction = 'left';
+          this.path3_direction = 'right';
+        } else {
+          this.path1_direction = 'right';
+          this.path2_direction = 'bottom';
+          this.path3_direction = 'top';
+        }
+      } else if (
+        options.path1 &&
+        !options.direction_path1 &&
+        options.path2 &&
+        !options.direction_path2 &&
+        options.path3 &&
+        options.direction_path3
+      ) {
+        if (options.direction_path2 === 'right') {
+          this.path1_direction = 'bottom';
+          this.path2_direction = 'top';
+          this.path3_direction = 'right';
+        } else if (options.direction_path2 === 'left') {
+          this.path1_direction = 'bottom';
+          this.path2_direction = 'right';
+          this.path3_direction = 'left';
+        } else {
+          this.path1_direction = 'right';
+          this.path2_direction = 'bottom';
+          this.path3_direction = 'top';
+        }
+      } else {
+        this.path1_direction = options.direction_path1;
+        this.path2_direction = options.direction_path2;
+        this.path3_direction = options.direction_path3;
+      }
 
-    this.initialize();
+      this.path1_direction = this.path1_direction || 'bottom';
+      this.path2_direction = this.path2_direction || 'right';
+      this.path3_direction = this.path3_direction || 'top';
+
+      var symbol = chart.paper.rect(0, 0, 0, 0);
+      symbol.attr({
+        fill: this.getAttr('fill'),
+        stroke: this.getAttr('element-color'),
+        'stroke-width': this.getAttr('line-width'),
+        width: this.text.getBBox().width + 2 * this.textMargin,
+        height: this.text.getBBox().height + 2 * this.textMargin,
+      });
+
+      symbol.node.setAttribute('class', this.getAttr('class'));
+
+      if (options.link) {
+        symbol.attr('href', options.link);
+      }
+      if (options.target) {
+        symbol.attr('target', options.target);
+      }
+
+      //ndrqu Add click function with event and options params
+      if (options.function) {
+        symbol.node.addEventListener(
+          'click',
+          function (evt) {
+            window[options.function](evt, options);
+          },
+          false
+        );
+        symbol.attr({ cursor: 'pointer' });
+      }
+      if (options.key) {
+        symbol.node.id = options.key;
+      }
+
+      this.symbol = symbol;
+      this.group.push(symbol);
+      symbol.insertBefore(this.text);
+
+      this.text.attr({
+        y: symbol.getBBox().height / 2,
+      });
+
+      this.initialize();
+    });
   }
   inherits$1(Parallel, flowchart_symbol);
 
-  Parallel.prototype.render = function() {
-
+  Parallel.prototype.render = function () {
     if (this.path1_direction) {
       this[this.path1_direction + '_symbol'] = this.path1_symbol;
     }
@@ -1498,7 +1558,7 @@
       var rightPoint = this.getRight();
 
       if (!this.right_symbol.isPositioned) {
-        this.right_symbol.setY(rightPoint.y - this.right_symbol.height / 2);
+        this.right_symbol.setY(rightPoint.y + this.right_symbol.height / 2);
         this.right_symbol.shiftX(this.group.getBBox().x + this.width + lineLength);
         (function shift() {
           var hasSymbolUnder = false;
@@ -1529,7 +1589,7 @@
     }
   };
 
-  Parallel.prototype.renderLines = function() {
+  Parallel.prototype.renderLines = function () {
     if (this.path1_symbol) {
       this.drawLineTo(this.path1_symbol, '', this.path1_direction);
     }
@@ -1728,7 +1788,6 @@
     options = options || {};
     options.text = options.text || 'Start';
     flowchart_symbol.call(this, chart, options);
-    this.initPath.call(this, chart, options);
   }
   inherits$2(Start, flowchart_symbol);
 
@@ -1740,7 +1799,6 @@
     options = options || {};
     options.text = options.text || 'End';
     flowchart_symbol.call(this, chart, options);
-    this.initPath.call(this, chart, options);
   }
   inherits$3(End, flowchart_symbol);
 
@@ -1749,10 +1807,8 @@
   var inherits$4 = flowchart_helpers.inherits;
 
   function Operation(chart, options) {
-    var symbol = chart.paper.rect(0, 0, 0, 0);
     options = options || {};
-    flowchart_symbol.call(this, chart, options, symbol);
-    // this.initPath.call(this, chart, options);
+    flowchart_symbol.call(this, chart, options);
   }
   inherits$4(Operation, flowchart_symbol);
 
@@ -1764,60 +1820,67 @@
 
   function InputOutput(chart, options) {
     options = options || {};
-    flowchart_symbol.call(this, chart, options);
-    this.textMargin = this.getAttr('text-margin');
+    flowchart_symbol.call(this, chart, options, () => {
+      this.textMargin = this.getAttr('text-margin');
 
-    this.text.attr({
-      x: this.textMargin * 3
+      this.text.attr({
+        x: this.textMargin * 3,
+      });
+
+      var width = this.text.getBBox().width + 4 * this.textMargin;
+      var height = this.text.getBBox().height + 2 * this.textMargin;
+      var startX = this.textMargin;
+      var startY = height / 2;
+
+      var start = { x: startX, y: startY };
+      var points = [
+        { x: startX - this.textMargin, y: height },
+        { x: startX - this.textMargin + width, y: height },
+        { x: startX - this.textMargin + width + 2 * this.textMargin, y: 0 },
+        { x: startX - this.textMargin + 2 * this.textMargin, y: 0 },
+        { x: startX, y: startY },
+      ];
+
+      var symbol = drawPath$2(chart, start, points);
+
+      symbol.attr({
+        stroke: this.getAttr('element-color'),
+        'stroke-width': this.getAttr('line-width'),
+        fill: this.getAttr('fill'),
+      });
+      if (options.link) {
+        symbol.attr('href', options.link);
+      }
+      if (options.target) {
+        symbol.attr('target', options.target);
+      }
+      if (options.key) {
+        symbol.node.id = options.key;
+      }
+      symbol.node.setAttribute('class', this.getAttr('class'));
+
+      this.text.attr({
+        y: symbol.getBBox().height / 2,
+      });
+
+      this.group.push(symbol);
+      symbol.insertBefore(this.text);
+
+      this.initialize();
     });
-
-    var width = this.text.getBBox().width + 4 * this.textMargin;
-    var height = this.text.getBBox().height + 2 * this.textMargin;
-    var startX = this.textMargin;
-    var startY = height/2;
-
-    var start = {x: startX, y: startY};
-    var points = [
-      {x: startX - this.textMargin, y: height},
-      {x: startX - this.textMargin + width, y: height},
-      {x: startX - this.textMargin + width + 2 * this.textMargin, y: 0},
-      {x: startX - this.textMargin + 2 * this.textMargin, y: 0},
-      {x: startX, y: startY}
-    ];
-
-    var symbol = drawPath$2(chart, start, points);
-
-    symbol.attr({
-      stroke: this.getAttr('element-color'),
-      'stroke-width': this.getAttr('line-width'),
-      fill: this.getAttr('fill')
-    });
-    if (options.link) { symbol.attr('href', options.link); }
-    if (options.target) { symbol.attr('target', options.target); }
-    if (options.key) { symbol.node.id = options.key; }
-    symbol.node.setAttribute('class', this.getAttr('class'));
-
-    this.text.attr({
-      y: symbol.getBBox().height/2
-    });
-
-    this.group.push(symbol);
-    symbol.insertBefore(this.text);
-
-    this.initialize();
   }
   inherits$5(InputOutput, flowchart_symbol);
 
-  InputOutput.prototype.getLeft = function() {
-    var y = this.getY() + this.group.getBBox().height/2;
+  InputOutput.prototype.getLeft = function () {
+    var y = this.getY() + this.group.getBBox().height / 2;
     var x = this.getX() + this.textMargin;
-    return {x: x, y: y};
+    return { x: x, y: y };
   };
 
-  InputOutput.prototype.getRight = function() {
-    var y = this.getY() + this.group.getBBox().height/2;
+  InputOutput.prototype.getRight = function () {
+    var y = this.getY() + this.group.getBBox().height / 2;
     var x = this.getX() + this.group.getBBox().width - this.textMargin;
-    return {x: x, y: y};
+    return { x: x, y: y };
   };
 
   var flowchart_symbol_inputoutput = InputOutput;
@@ -1825,43 +1888,83 @@
   var inherits$6 = flowchart_helpers.inherits;
 
   function Subroutine(chart, options) {
-    var symbol = chart.paper.rect(0, 0, 0, 0);
     options = options || {};
-    flowchart_symbol.call(this, chart, options, symbol);
+    flowchart_symbol.call(this, chart, options, () => {
+      this.textMargin = this.getAttr('text-margin');
+      const width = this.text.getBBox().width + 2 * this.textMargin;
+      const height = this.text.getBBox().height + 2 * this.textMargin;
 
-    symbol.attr({
-      width: this.text.getBBox().width + 4 * this.getAttr('text-margin')
+      var symbol = chart.paper.rect(0, 0, 0, 0);
+
+      symbol.attr({
+        fill: this.getAttr('fill'),
+        stroke: this.getAttr('element-color'),
+        'stroke-width': this.getAttr('line-width'),
+        width,
+        height,
+      });
+
+      symbol.node.setAttribute('class', this.getAttr('class'));
+      if (options.link) {
+        symbol.attr('href', options.link);
+      }
+      if (options.target) {
+        symbol.attr('target', options.target);
+      }
+      if (options.function) {
+        symbol.node.addEventListener(
+          'click',
+          function (evt) {
+            window[options.function](evt, options);
+          },
+          false
+        );
+        symbol.attr({ cursor: 'pointer' });
+      }
+      if (options.key) {
+        symbol.node.id = options.key;
+      }
+      this.symbol = symbol;
+      this.group.push(symbol);
+      symbol.insertBefore(this.text);
+
+      this.text.attr({
+        x: 2 * this.getAttr('text-margin'),
+        y: symbol.getBBox().height / 2,
+      });
+
+      var innerWrap = chart.paper.rect(0, 0, 0, 0);
+      innerWrap.attr({
+        x: this.getAttr('text-margin'),
+        stroke: this.getAttr('element-color'),
+        'stroke-width': this.getAttr('line-width'),
+        width: this.text.getBBox().width + 2 * this.getAttr('text-margin'),
+        height: this.text.getBBox().height + 2 * this.getAttr('text-margin'),
+        fill: this.getAttr('fill'),
+      });
+      if (options.key) {
+        innerWrap.node.id = options.key + 'i';
+      }
+
+      var font = this.getAttr('font');
+      var fontF = this.getAttr('font-family');
+      var fontW = this.getAttr('font-weight');
+
+      if (font) innerWrap.attr({ font: font });
+      if (fontF) innerWrap.attr({ 'font-family': fontF });
+      if (fontW) innerWrap.attr({ 'font-weight': fontW });
+
+      if (options.link) {
+        innerWrap.attr('href', options.link);
+      }
+      if (options.target) {
+        innerWrap.attr('target', options.target);
+      }
+      this.group.push(innerWrap);
+      innerWrap.insertBefore(this.text);
+
+      this.initialize();
     });
-
-    this.text.attr({
-      'x': 2 * this.getAttr('text-margin')
-    });
-
-    var innerWrap = chart.paper.rect(0, 0, 0, 0);
-    innerWrap.attr({
-      x: this.getAttr('text-margin'),
-      stroke: this.getAttr('element-color'),
-      'stroke-width': this.getAttr('line-width'),
-      width: this.text.getBBox().width + 2 * this.getAttr('text-margin'),
-      height: this.text.getBBox().height + 2 * this.getAttr('text-margin'),
-      fill: this.getAttr('fill')
-    });
-    if (options.key) { innerWrap.node.id = options.key + 'i'; }
-
-    var font = this.getAttr('font');
-    var fontF = this.getAttr('font-family');
-    var fontW = this.getAttr('font-weight');
-
-    if (font) innerWrap.attr({ 'font': font });
-    if (fontF) innerWrap.attr({ 'font-family': fontF });
-    if (fontW) innerWrap.attr({ 'font-weight': fontW });
-
-    if (options.link) { innerWrap.attr('href', options.link); }
-    if (options.target) { innerWrap.attr('target', options.target); }
-    this.group.push(innerWrap);
-    innerWrap.insertBefore(this.text);
-
-    this.initialize();
   }
   inherits$6(Subroutine, flowchart_symbol);
 

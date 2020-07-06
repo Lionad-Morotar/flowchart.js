@@ -4,7 +4,7 @@ const rectData = rectangle.init({ calcBaseRatio });
 const typeDataMap = {
   start: rectData,
   end: rectData,
-  // operation: rectData,
+  operation: rectData,
 };
 
 function splitNum(str) {

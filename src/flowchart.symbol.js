@@ -3,10 +3,9 @@ var drawAPI = require('./flowchart.functions');
 var drawLine = drawAPI.drawLine;
 var checkLineIntersection = drawAPI.checkLineIntersection;
 
-function Symbol(chart, options, symbol) {
+function Symbol(chart, options, symbolFn) {
   this.chart = chart;
   this.group = this.chart.paper.set();
-  this.symbol = symbol;
   this.connectedTo = [];
   this.symbolType = options.symbolType;
   this.flowstate = options.flowstate || 'future';
@@ -19,112 +18,9 @@ function Symbol(chart, options, symbol) {
 
   this.next_direction = options.next && options['direction_next'] ? options['direction_next'] : undefined;
 
-  this.text = this.chart.paper.text(0, 0, options.text);
-  //Raphael does not support the svg group tag so setting the text node id to the symbol node id plus t
-  if (options.key) {
-    this.text.node.id = options.key + 't';
-  }
-  this.text.node.setAttribute('class', this.getAttr('class') + 't');
-
-  this.text.attr({
-    'text-anchor': 'start',
-    x: this.getAttr('text-margin'),
-    fill: this.getAttr('font-color'),
-    'font-size': this.getAttr('font-size'),
-  });
-
-  var font = this.getAttr('font');
-  var fontF = this.getAttr('font-family');
-  var fontW = this.getAttr('font-weight');
-
-  if (font) this.text.attr({ font: font });
-  if (fontF) this.text.attr({ 'font-family': fontF });
-  if (fontW) this.text.attr({ 'font-weight': fontW });
-
-  if (options.link) {
-    this.text.attr('href', options.link);
-  }
-
-  //ndrqu Add click function with event and options params
-  if (options.function) {
-    this.text.attr({ cursor: 'pointer' });
-
-    this.text.node.addEventListener(
-      'click',
-      function (evt) {
-        window[options.function](evt, options);
-      },
-      false
-    );
-  }
-
-  if (options.target) {
-    this.text.attr('target', options.target);
-  }
-
-  var maxWidth = this.getAttr('maxWidth');
-  if (maxWidth) {
-    // using this approach: http://stackoverflow.com/a/3153457/22466
-    var words = options.text.split(' ');
-    var tempText = '';
-    for (var i = 0, ii = words.length; i < ii; i++) {
-      var word = words[i];
-      this.text.attr('text', tempText + ' ' + word);
-      if (this.text.getBBox().width > maxWidth) {
-        tempText += '\n' + word;
-      } else {
-        tempText += ' ' + word;
-      }
-    }
-    this.text.attr('text', tempText.substring(1));
-  }
-
-  this.group.push(this.text);
-
-  if (symbol) {
-    var tmpMargin = this.getAttr('text-margin');
-
-    symbol.attr({
-      fill: this.getAttr('fill'),
-      stroke: this.getAttr('element-color'),
-      'stroke-width': this.getAttr('line-width'),
-      width: this.text.getBBox().width + 2 * tmpMargin,
-      height: this.text.getBBox().height + 2 * tmpMargin,
-    });
-
-    symbol.node.setAttribute('class', this.getAttr('class'));
-
-    if (options.link) {
-      symbol.attr('href', options.link);
-    }
-    if (options.target) {
-      symbol.attr('target', options.target);
-    }
-
-    //ndrqu Add click function with event and options params
-    if (options.function) {
-      symbol.node.addEventListener(
-        'click',
-        function (evt) {
-          window[options.function](evt, options);
-        },
-        false
-      );
-      symbol.attr({ cursor: 'pointer' });
-    }
-    if (options.key) {
-      symbol.node.id = options.key;
-    }
-
-    this.group.push(symbol);
-    symbol.insertBefore(this.text);
-
-    this.text.attr({
-      y: symbol.getBBox().height / 2,
-    });
-
-    this.initialize();
-  }
+  this.initText(chart, options);
+  // console.log(this.symbolType);
+  symbolFn ? symbolFn() : this.initSymbol(chart, options);
 }
 
 /* Gets the attribute based on Flowstate, Symbol-Name and default, first found wins */
@@ -726,40 +622,120 @@ Symbol.prototype.drawLineTo = function (symbol, text, origin) {
   }
 };
 
-Symbol.prototype.initPath = function (chart, options) {
+Symbol.prototype.initText = function (chart, options) {
+  this.text = this.chart.paper.text(0, 0, options.text);
+  //Raphael does not support the svg group tag so setting the text node id to the symbol node id plus t
+  if (options.key) {
+    this.text.node.id = options.key + 't';
+  }
+  this.text.node.setAttribute('class', this.getAttr('class') + 't');
+
+  this.text.attr({
+    'text-anchor': 'start',
+    x: this.getAttr('text-margin'),
+    fill: this.getAttr('font-color'),
+    'font-size': this.getAttr('font-size'),
+  });
+
+  var font = this.getAttr('font');
+  var fontF = this.getAttr('font-family');
+  var fontW = this.getAttr('font-weight');
+
+  if (font) this.text.attr({ font: font });
+  if (fontF) this.text.attr({ 'font-family': fontF });
+  if (fontW) this.text.attr({ 'font-weight': fontW });
+
+  if (options.link) {
+    this.text.attr('href', options.link);
+  }
+
+  //ndrqu Add click function with event and options params
+  if (options.function) {
+    this.text.attr({ cursor: 'pointer' });
+
+    this.text.node.addEventListener(
+      'click',
+      function (evt) {
+        window[options.function](evt, options);
+      },
+      false
+    );
+  }
+
+  if (options.target) {
+    this.text.attr('target', options.target);
+  }
+
+  var maxWidth = this.getAttr('maxWidth');
+  if (maxWidth) {
+    // using this approach: http://stackoverflow.com/a/3153457/22466
+    var words = options.text.split(' ');
+    var tempText = '';
+    for (var i = 0, ii = words.length; i < ii; i++) {
+      var word = words[i];
+      this.text.attr('text', tempText + ' ' + word);
+      if (this.text.getBBox().width > maxWidth) {
+        tempText += '\n' + word;
+      } else {
+        tempText += ' ' + word;
+      }
+    }
+    this.text.attr('text', tempText.substring(1));
+  }
+
+  this.group.push(this.text);
+};
+
+Symbol.prototype.initSymbol = function (chart, options) {
   this.textMargin = this.getAttr('text-margin');
-  var width = this.text.getBBox().width + 2 * this.textMargin;
-  var height = this.text.getBBox().height + 2 * this.textMargin;
+  const width = this.text.getBBox().width + 2 * this.textMargin;
+  const height = this.text.getBBox().height + 2 * this.textMargin;
   const ratio = { x: width, y: height };
   const pathVal = utils.calcPath({
     type: this.symbolType,
     ratio,
   });
-  var symbol = chart.paper.path(pathVal);
+  const symbol = chart.paper.path(pathVal);
+
   symbol.attr({
+    fill: this.getAttr('fill'),
     stroke: this.getAttr('element-color'),
     'stroke-width': this.getAttr('line-width'),
-    fill: this.getAttr('fill'),
   });
+
+  symbol.node.setAttribute('class', this.getAttr('class'));
+
   if (options.link) {
     symbol.attr('href', options.link);
   }
   if (options.target) {
     symbol.attr('target', options.target);
   }
+  if (options.function) {
+    symbol.node.addEventListener(
+      'click',
+      function (evt) {
+        window[options.function](evt, options);
+      },
+      false
+    );
+    symbol.attr({ cursor: 'pointer' });
+  }
   if (options.key) {
     symbol.node.id = options.key;
   }
-  symbol.node.setAttribute('class', this.getAttr('class'));
+
+  this.symbol = symbol;
+  this.group.push(symbol);
+  symbol.insertBefore(this.text);
 
   this.text.attr({
     y: symbol.getBBox().height / 2,
   });
 
-  this.group.push(symbol);
-  symbol.insertBefore(this.text);
-
   this.initialize();
+
+  return this.symbol;
 };
 
 module.exports = Symbol;
