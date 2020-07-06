@@ -14,7 +14,7 @@ function parse(input) {
   var chart = {
     symbols: {},
     start: null,
-    drawSVG: function(container, options) {
+    drawSVG: function (container, options) {
       var self = this;
 
       if (this.diagram) {
@@ -65,14 +65,14 @@ function parse(input) {
         if (self.start === s) {
           diagram.startWith(dispSymb);
         } else if (prevDisp && prev && !prevDisp.pathOk) {
-          if (prevDisp instanceof(Condition)) {
+          if (prevDisp instanceof Condition) {
             if (prev.yes === s) {
               prevDisp.yes(dispSymb);
             }
             if (prev.no === s) {
               prevDisp.no(dispSymb);
             }
-          } else if (prevDisp instanceof(Parallel)) {
+          } else if (prevDisp instanceof Parallel) {
             if (prev.path1 === s) {
               prevDisp.path1(dispSymb);
             }
@@ -91,14 +91,14 @@ function parse(input) {
           return dispSymb;
         }
 
-        if (dispSymb instanceof(Condition)) {
+        if (dispSymb instanceof Condition) {
           if (s.yes) {
             constructChart(s.yes, dispSymb, s);
           }
           if (s.no) {
             constructChart(s.no, dispSymb, s);
           }
-        } else if (dispSymb instanceof(Parallel)) {
+        } else if (dispSymb instanceof Parallel) {
           if (s.path1) {
             constructChart(s.path1, dispSymb, s);
           }
@@ -117,18 +117,18 @@ function parse(input) {
 
       diagram.render();
     },
-    clean: function() {
+    clean: function () {
       this.diagram.clean();
     },
-    options: function() {
+    options: function () {
       return this.diagram.options;
-    }
+    },
   };
 
   var lines = [];
   var prevBreak = 0;
   for (var i0 = 1, i0len = input.length; i0 < i0len; i0++) {
-    if(input[i0] === '\n' && input[i0 - 1] !== '\\') {
+    if (input[i0] === '\n' && input[i0 - 1] !== '\\') {
       var line0 = input.substring(prevBreak, i0);
       prevBreak = i0 + 1;
       lines.push(line0.replace(/\\\n/g, '\n'));
@@ -139,7 +139,7 @@ function parse(input) {
     lines.push(input.substr(prevBreak));
   }
 
-  for (var l = 1, len = lines.length; l < len;) {
+  for (var l = 1, len = lines.length; l < len; ) {
     var currentLine = lines[l];
 
     if (currentLine.indexOf('->') < 0 && currentLine.indexOf('=>') < 0 && currentLine.indexOf('@>') < 0) {
@@ -151,20 +151,20 @@ function parse(input) {
     }
   }
 
-  function getStyle(s){
+  function getStyle(s) {
     var startIndex = s.indexOf('(') + 1;
     var endIndex = s.indexOf(')');
     if (startIndex >= 0 && endIndex >= 0) {
-      return s.substring(startIndex,endIndex);
+      return s.substring(startIndex, endIndex);
     }
     return '{}';
   }
 
-  function getSymbValue(s){
+  function getSymbValue(s) {
     var startIndex = s.indexOf('(') + 1;
     var endIndex = s.indexOf(')');
     if (startIndex >= 0 && endIndex >= 0) {
-      return s.substring(startIndex,endIndex);
+      return s.substring(startIndex, endIndex);
     }
     return '';
   }
@@ -208,14 +208,14 @@ function parse(input) {
         flowstate: null,
         function: null,
         lineStyle: {},
-        params: {}
+        params: {},
       };
 
       //parse parameters
       var params = parts[0].match(/\((.*)\)/);
-      if (params && params.length > 1){
+      if (params && params.length > 1) {
         var entries = params[1].split(',');
-        for(var i = 0; i < entries.length; i++) {
+        for (var i = 0; i < entries.length; i++) {
           var entry = entries[i].split('=');
           if (entry.length == 2) {
             symbol.params[entry[0]] = entry[1];
@@ -275,7 +275,6 @@ function parse(input) {
       /* end of flowstate support */
 
       chart.symbols[symbol.key] = symbol;
-
     } else if (line.indexOf('->') >= 0) {
       // flow
       var flowSymbols = line.split('->');
@@ -311,19 +310,17 @@ function parse(input) {
         }
       }
     } else if (line.indexOf('@>') >= 0) {
-
       // line style
       var lineStyleSymbols = line.split('@>');
       for (var iSS = 0, lenSS = lineStyleSymbols.length; iSS < lenSS; iSS++) {
-        if ((iSS + 1) !== lenSS) {
+        if (iSS + 1 !== lenSS) {
           var curSymb = getSymbol(lineStyleSymbols[iSS]);
-          var nextSymbol = getSymbol(lineStyleSymbols[iSS+1]);
+          var nextSymbol = getSymbol(lineStyleSymbols[iSS + 1]);
 
           curSymb['lineStyle'][nextSymbol.key] = JSON.parse(getStyle(lineStyleSymbols[iSS + 1]));
         }
       }
     }
-
   }
   return chart;
 }

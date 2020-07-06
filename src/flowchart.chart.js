@@ -16,44 +16,44 @@ function FlowChart(container, options) {
   this.start = null;
 }
 
-FlowChart.prototype.handle = function(symbol) {
+FlowChart.prototype.handle = function (symbol) {
   if (this.symbols.indexOf(symbol) <= -1) {
     this.symbols.push(symbol);
   }
 
   var flowChart = this;
 
-  if (symbol instanceof(Condition)) {
-    symbol.yes = function(nextSymbol) {
+  if (symbol instanceof Condition) {
+    symbol.yes = function (nextSymbol) {
       symbol.yes_symbol = nextSymbol;
-      if(symbol.no_symbol) {
+      if (symbol.no_symbol) {
         symbol.pathOk = true;
       }
       return flowChart.handle(nextSymbol);
     };
-    symbol.no = function(nextSymbol) {
+    symbol.no = function (nextSymbol) {
       symbol.no_symbol = nextSymbol;
       if (symbol.yes_symbol) {
         symbol.pathOk = true;
       }
       return flowChart.handle(nextSymbol);
     };
-  } else if (symbol instanceof(Parallel)) {
-    symbol.path1 = function(nextSymbol) {
+  } else if (symbol instanceof Parallel) {
+    symbol.path1 = function (nextSymbol) {
       symbol.path1_symbol = nextSymbol;
       if (symbol.path2_symbol) {
         symbol.pathOk = true;
       }
       return flowChart.handle(nextSymbol);
     };
-    symbol.path2 = function(nextSymbol) {
+    symbol.path2 = function (nextSymbol) {
       symbol.path2_symbol = nextSymbol;
       if (symbol.path3_symbol) {
         symbol.pathOk = true;
       }
       return flowChart.handle(nextSymbol);
     };
-    symbol.path3 = function(nextSymbol) {
+    symbol.path3 = function (nextSymbol) {
       symbol.path3_symbol = nextSymbol;
       if (symbol.path1_symbol) {
         symbol.pathOk = true;
@@ -61,7 +61,7 @@ FlowChart.prototype.handle = function(symbol) {
       return flowChart.handle(nextSymbol);
     };
   } else {
-    symbol.then = function(nextSymbol) {
+    symbol.then = function (nextSymbol) {
       symbol.next = nextSymbol;
       symbol.pathOk = true;
       return flowChart.handle(nextSymbol);
@@ -71,12 +71,12 @@ FlowChart.prototype.handle = function(symbol) {
   return symbol;
 };
 
-FlowChart.prototype.startWith = function(symbol) {
+FlowChart.prototype.startWith = function (symbol) {
   this.start = symbol;
   return this.handle(symbol);
 };
 
-FlowChart.prototype.render = function() {
+FlowChart.prototype.render = function () {
   var maxWidth = 0,
     maxHeight = 0,
     i = 0,
@@ -100,8 +100,8 @@ FlowChart.prototype.render = function() {
 
   for (i = 0, len = this.symbols.length; i < len; i++) {
     symbol = this.symbols[i];
-    symbol.shiftX(this.options.x + (maxWidth - symbol.width)/2 + this.options['line-width']);
-    symbol.shiftY(this.options.y + (maxHeight - symbol.height)/2 + this.options['line-width']);
+    symbol.shiftX(this.options.x + (maxWidth - symbol.width) / 2 + this.options['line-width']);
+    symbol.shiftY(this.options.y + (maxHeight - symbol.height) / 2 + this.options['line-width']);
   }
 
   this.start.render();
@@ -167,7 +167,7 @@ FlowChart.prototype.render = function() {
   this.paper.setViewBox(minX, minY, width, height, true);
 };
 
-FlowChart.prototype.clean = function() {
+FlowChart.prototype.clean = function () {
   if (this.paper) {
     var paperDom = this.paper.canvas;
     paperDom.parentNode && paperDom.parentNode.removeChild(paperDom);

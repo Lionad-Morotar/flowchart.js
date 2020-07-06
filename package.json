@@ -18,17 +18,15 @@
     "lodash": ">=0.2.1",
     "moment": "^2.11.1",
     "prettier": "^2.0.5",
-    "webpack": "^1.12.11",
-    "webpack-dev-middleware": "^1.4.0",
-    "webpack-hot-middleware": "^2.6.0"
+    "rollup": "^2.19.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0"
   },
   "scripts": {
     "init": "git submodule init && git submodule update && git submodule status",
-    "start": "node devserver.js",
+    "dev": "http-server ./ -c0",
+    "start": "rollup --config rollup.config.js -w",
     "lint": "eslint src",
-    "build:unminified": "cross-env NODE_ENV=production webpack -d --config webpack.config.js",
-    "build:minified": "cross-env NODE_ENV=production MINIFIED=1 webpack -d --config webpack.config.js",
-    "build": "npm run build:unminified && npm run build:minified && cp ./release/flowchart.js ./site/flowchart-latest.js",
     "test": "npm run lint"
   },
   "repository": {
