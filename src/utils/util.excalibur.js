@@ -21,9 +21,12 @@ function calcBaseRatio(p1, p2) {
     else return res / Math.abs(x);
   });
 }
-function calcPath({ ratio, type }) {
+function calcRatio({ width, height, baseRatio }) {
+  return { x: width / baseRatio, y: height / baseRatio };
+}
+function calcPath({ width, height, type }) {
   const dataRef = typeDataMap[type];
-  const { x: rx, y: ry } = ratio;
+  const { x: rx, y: ry } = calcRatio({ width, height, baseRatio: dataRef.baseRatio });
   const ns = splitNum(dataRef.path);
   const offset = {
     x: ns.map((x, i) => +x * +dataRef.ratioBase.x[i] * +rx),

@@ -690,10 +690,10 @@ Symbol.prototype.initSymbol = function (chart, options) {
   this.textMargin = this.getAttr('text-margin');
   const width = this.text.getBBox().width + 2 * this.textMargin;
   const height = this.text.getBBox().height + 2 * this.textMargin;
-  const ratio = { x: width, y: height };
   const pathVal = utils.calcPath({
     type: this.symbolType,
-    ratio,
+    width,
+    height,
   });
   const symbol = chart.paper.path(pathVal);
 
