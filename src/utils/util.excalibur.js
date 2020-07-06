@@ -1,7 +1,10 @@
-const rectData = require('../data/rectangle');
+const rectangle = require('../data/rectangle');
+const rectData = rectangle.init({ calcBaseRatio });
 
 const typeDataMap = {
-  start: rectData.init({ calcBaseRatio }),
+  start: rectData,
+  end: rectData,
+  // operation: rectData,
 };
 
 function splitNum(str) {

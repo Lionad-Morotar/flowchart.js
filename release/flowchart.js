@@ -184,8 +184,12 @@
 
   var rectangle = data;
 
+  const rectData = rectangle.init({ calcBaseRatio });
+
   const typeDataMap = {
-    start: rectangle.init({ calcBaseRatio }),
+    start: rectData,
+    end: rectData,
+    // operation: rectData,
   };
 
   function splitNum(str) {
@@ -1733,10 +1737,10 @@
   var inherits$3 = flowchart_helpers.inherits;
 
   function End(chart, options) {
-    var symbol = chart.paper.rect(0, 0, 0, 0, 20);
     options = options || {};
     options.text = options.text || 'End';
-    flowchart_symbol.call(this, chart, options, symbol);
+    flowchart_symbol.call(this, chart, options);
+    this.initPath.call(this, chart, options);
   }
   inherits$3(End, flowchart_symbol);
 
@@ -1748,6 +1752,7 @@
     var symbol = chart.paper.rect(0, 0, 0, 0);
     options = options || {};
     flowchart_symbol.call(this, chart, options, symbol);
+    // this.initPath.call(this, chart, options);
   }
   inherits$4(Operation, flowchart_symbol);
 
