@@ -1,6 +1,6 @@
 const utils = require('./utils/util.excalibur');
 var drawAPI = require('./flowchart.functions');
-var drawLine = drawAPI.drawLine;
+var drawLine = drawAPI.drawHandScriptLine;
 var checkLineIntersection = drawAPI.checkLineIntersection;
 
 function Symbol(chart, options, symbolFn) {
@@ -179,15 +179,12 @@ Symbol.prototype.render = function () {
 
 Symbol.prototype.renderLines = function () {
   if (this.next) {
-    if (this.next_direction) {
-      this.drawLineTo(this.next, this.getAttr('arrow-text') || '', this.next_direction);
-    } else {
-      this.drawLineTo(this.next, this.getAttr('arrow-text') || '');
-    }
+    this.drawLineTo(this.next, this.getAttr('arrow-text') || '', this.next_direction);
   }
 };
 
 Symbol.prototype.drawLineTo = function (symbol, text, origin) {
+  drawLine = drawLine.bind(this);
   if (this.connectedTo.indexOf(symbol) < 0) {
     this.connectedTo.push(symbol);
   }

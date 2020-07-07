@@ -1,7 +1,7 @@
 var Symbol = require('./flowchart.symbol');
 var inherits = require('./flowchart.helpers').inherits;
 var drawAPI = require('./flowchart.functions');
-var handScriptPath = drawAPI.handScriptPath;
+var drawHandScriptPath = drawAPI.drawHandScriptPath;
 
 function InputOutput(chart, options) {
   options = options || {};
@@ -26,7 +26,7 @@ function InputOutput(chart, options) {
       { x: startX, y: startY },
     ];
 
-    var symbol = handScriptPath({
+    var symbol = drawHandScriptPath({
       type: this.getAttr('line-style'),
       chart,
       points,

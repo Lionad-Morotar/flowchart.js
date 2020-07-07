@@ -269,6 +269,12 @@
     calcPath: util_excalibur_3
   });
 
+  /* TODO seed */
+
+  const threshold = 2;
+  const equal = (a, b) => Math.abs(a - b) < threshold;
+  const dotEqual = (from, to) => Math.abs(from.x - to.x) < threshold && Math.abs(from.y - to.y) < threshold;
+
   function drawPath(chart, location, points) {
     var i, len;
     var path = 'M{0},{1}';
@@ -300,8 +306,6 @@
   }
 
   function calcDirection(from, to) {
-    const threshold = 1;
-    const equal = (a, b) => Math.abs(a - b) < threshold;
     if (equal(from.x, to.x)) {
       if (from.y > to.y) {
         return 'top';
@@ -322,31 +326,38 @@
     const half = (a, b) => (+a + b) / 2;
     const randomOffset = () => Math.random() * 8 * (Math.random() < 0.5 ? 1 : -1);
     const direction = calcDirection(from, to);
-    let curvDot = {
-      x: half(from.x, to.x),
-      y: half(from.y, to.y),
-    };
     const move = `M${from.x},${from.y}`;
-    if (direction === 'left' || direction === 'right') {
-      curvDot.y += randomOffset();
-    } else if (direction === 'top' || direction === 'bottom') {
-      curvDot.x += randomOffset();
+    let line = null;
+    let curvDot = null;
+
+    if (dotEqual(from, to)) {
+      line = `M${to.x},${to.y}`;
     } else {
-      curvDot.y += randomOffset();
-      curvDot.x += randomOffset();
+      curvDot = {
+        x: half(from.x, to.x),
+        y: half(from.y, to.y),
+      };
+      if (direction === 'left' || direction === 'right') {
+        curvDot.y += randomOffset();
+      } else if (direction === 'top' || direction === 'bottom') {
+        curvDot.x += randomOffset();
+      } else {
+        curvDot.y += randomOffset();
+        curvDot.x += randomOffset();
+      }
+      from.x = safe(from.x);
+      from.y = safe(from.y);
+      to.x = safe(to.x);
+      to.y = safe(to.y);
+      curvDot.x = safe(curvDot.x);
+      curvDot.y = safe(curvDot.y);
+      line = `C${from.x},${from.y},${curvDot.x},${curvDot.y},${to.x},${to.y}`;
     }
-    from.x = safe(from.x);
-    from.y = safe(from.y);
-    to.x = safe(to.x);
-    to.y = safe(to.y);
-    curvDot.x = safe(curvDot.x);
-    curvDot.y = safe(curvDot.y);
-    const line = `C${from.x},${from.y},${curvDot.x},${curvDot.y},${to.x},${to.y}`;
+
     return [move, line].join(' ');
   }
 
-  // TODO seed
-  function handScriptPath({ chart, points, type }) {
+  function drawHandScriptPath({ chart, points, type }) {
     const pathValues = [];
     points.map((dot, i) => {
       if (i !== points.length - 1) {
@@ -395,6 +406,109 @@
     }
 
     var line = chart.paper.path(path, pathValues);
+    line.attr({
+      stroke: chart.options['line-color'],
+      'stroke-width': chart.options['line-width'],
+      'arrow-end': chart.options['arrow-end'],
+    });
+
+    var font = chart.options.font;
+    var fontF = chart.options['font-family'];
+    var fontW = chart.options['font-weight'];
+
+    if (font) line.attr({ font: font });
+    if (fontF) line.attr({ 'font-family': fontF });
+    if (fontW) line.attr({ 'font-weight': fontW });
+
+    if (text) {
+      var centerText = false;
+
+      var textPath = chart.paper.text(0, 0, text);
+
+      var isHorizontal = false;
+      var firstTo = to[0];
+
+      if (from.y === firstTo.y) {
+        isHorizontal = true;
+      }
+
+      var x = 0,
+        y = 0;
+
+      if (centerText) {
+        if (from.x > firstTo.x) {
+          x = from.x - (from.x - firstTo.x) / 2;
+        } else {
+          x = firstTo.x - (firstTo.x - from.x) / 2;
+        }
+
+        if (from.y > firstTo.y) {
+          y = from.y - (from.y - firstTo.y) / 2;
+        } else {
+          y = firstTo.y - (firstTo.y - from.y) / 2;
+        }
+
+        if (isHorizontal) {
+          x -= textPath.getBBox().width / 2;
+          y -= chart.options['text-margin'];
+        } else {
+          x += chart.options['text-margin'];
+          y -= textPath.getBBox().height / 2;
+        }
+      } else {
+        x = from.x;
+        y = from.y;
+
+        if (isHorizontal) {
+          x += chart.options['text-margin'] / 2;
+          y -= chart.options['text-margin'];
+        } else {
+          x += chart.options['text-margin'] / 2;
+          y += chart.options['text-margin'];
+          if (from.y > firstTo.y) {
+            y -= chart.options['text-margin'] * 2;
+          }
+        }
+      }
+
+      textPath.attr({
+        'text-anchor': 'start',
+        'font-size': chart.options['font-size'],
+        fill: chart.options['font-color'],
+        x: x,
+        y: y,
+      });
+
+      if (font) textPath.attr({ font: font });
+      if (fontF) textPath.attr({ 'font-family': fontF });
+      if (fontW) textPath.attr({ 'font-weight': fontW });
+    }
+
+    return line;
+  }
+
+  function drawHandScriptLine(chart, from, to, text) {
+    to = to instanceof Array ? to : [to];
+    const type = this.getAttr('line-style');
+    const points = [from, ...to];
+    const pathValues = [];
+    points.map((dot, i) => {
+      if (i !== points.length - 1) {
+        let line = null;
+        switch (type) {
+          case 'double':
+            line = handScriptLine(dot, points[i + 1]) + ' ' + handScriptLine(dot, points[i + 1]);
+            break;
+          default:
+            line = handScriptLine(dot, points[i + 1]);
+        }
+        pathValues.push(line);
+      }
+    });
+
+    const path = pathValues.join(' ');
+    var line = chart.paper.path(path);
+
     line.attr({
       stroke: chart.options['line-color'],
       'stroke-width': chart.options['line-width'],
@@ -532,12 +646,13 @@
 
   var flowchart_functions = {
     drawPath,
-    handScriptPath,
+    drawHandScriptPath,
     drawLine,
+    drawHandScriptLine,
     checkLineIntersection,
   };
 
-  var drawLine$1 = flowchart_functions.drawLine;
+  var drawLine$1 = flowchart_functions.drawHandScriptLine;
   var checkLineIntersection$1 = flowchart_functions.checkLineIntersection;
 
   function Symbol(chart, options, symbolFn) {
@@ -716,15 +831,12 @@
 
   Symbol.prototype.renderLines = function () {
     if (this.next) {
-      if (this.next_direction) {
-        this.drawLineTo(this.next, this.getAttr('arrow-text') || '', this.next_direction);
-      } else {
-        this.drawLineTo(this.next, this.getAttr('arrow-text') || '');
-      }
+      this.drawLineTo(this.next, this.getAttr('arrow-text') || '', this.next_direction);
     }
   };
 
   Symbol.prototype.drawLineTo = function (symbol, text, origin) {
+    drawLine$1 = drawLine$1.bind(this);
     if (this.connectedTo.indexOf(symbol) < 0) {
       this.connectedTo.push(symbol);
     }
@@ -1858,7 +1970,7 @@
 
   var inherits$5 = flowchart_helpers.inherits;
 
-  var handScriptPath$1 = flowchart_functions.handScriptPath;
+  var drawHandScriptPath$1 = flowchart_functions.drawHandScriptPath;
 
   function InputOutput(chart, options) {
     options = options || {};
@@ -1883,7 +1995,7 @@
         { x: startX, y: startY },
       ];
 
-      var symbol = handScriptPath$1({
+      var symbol = drawHandScriptPath$1({
         type: this.getAttr('line-style'),
         chart,
         points,
