@@ -75,6 +75,10 @@
     };
   }
 
+  var flowchart_shim = /*#__PURE__*/Object.freeze({
+    __proto__: null
+  });
+
   function _defaults(options, defaultOptions) {
     if (!options || typeof options === 'function') {
       return defaultOptions;
@@ -136,9 +140,8 @@
     'line-style': 'double',
     'font-size': 14,
     'font-color': 'black',
-    // 'font': 'normal',
-    // 'font-family': 'calibri',
-    // 'font-weight': 'normal',
+    'font-family': 'scripts',
+    'font-weight': 'normal',
     'line-color': 'black',
     'element-color': 'black',
     fill: 'white',
@@ -256,18 +259,6 @@
   }
 
   var util_excalibur = { splitNum, calcBaseRatio, calcPath };
-  var util_excalibur_1 = util_excalibur.splitNum;
-  var util_excalibur_2 = util_excalibur.calcBaseRatio;
-  var util_excalibur_3 = util_excalibur.calcPath;
-
-  var util_excalibur$1 = /*#__PURE__*/Object.freeze({
-    __proto__: null,
-    'default': util_excalibur,
-    __moduleExports: util_excalibur,
-    splitNum: util_excalibur_1,
-    calcBaseRatio: util_excalibur_2,
-    calcPath: util_excalibur_3
-  });
 
   /* TODO seed */
 
@@ -1339,7 +1330,7 @@
     this.textMargin = this.getAttr('text-margin');
     const width = calced.width || this.text.getBBox().width + 2 * this.textMargin;
     const height = calced.height || this.text.getBBox().height + 2 * this.textMargin;
-    const pathVal = util_excalibur$1.calcPath({
+    const pathVal = util_excalibur.calcPath({
       type: this.symbolType,
       width,
       height,
@@ -2453,6 +2444,12 @@
 
   	})(jQuery); // eslint-disable-line
   }
+
+  function getCjsExportFromNamespace (n) {
+  	return n && n['default'] || n;
+  }
+
+  getCjsExportFromNamespace(flowchart_shim);
 
   var FlowChart$1 = {
   	parse: flowchart_parse

@@ -1,0 +1,6 @@
+/* English Font */
+@font-face {
+  font-family: 'scripts';
+  font-display: swap;
+  src: url('./FG_Virgil.woff2') format('woff2');
+}
