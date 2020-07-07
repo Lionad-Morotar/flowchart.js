@@ -1,6 +1,8 @@
 **WIP**
 
-forked from [adrai/flowchart.js](http://flowchart.js.org)，add handscript-like charts.
+**WIP** Hand drawn flow chart.
+
+![](/imgs/2020-07-07-10-40-08.png)
 
 # [flowchart.js](http://flowchart.js.org)
 
