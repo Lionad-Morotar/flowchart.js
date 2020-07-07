@@ -1,7 +1,5 @@
 var Symbol = require('./flowchart.symbol');
 var inherits = require('./flowchart.helpers').inherits;
-var drawAPI = require('./flowchart.functions');
-var drawPath = drawAPI.drawPath;
 
 function Condition(chart, options) {
   options = options || {};
@@ -55,68 +53,19 @@ function Condition(chart, options) {
 
     this.textMargin = this.getAttr('text-margin');
 
-    var width = this.text.getBBox().width + 3 * this.textMargin;
-    width += width / 2;
-    var height = this.text.getBBox().height + 2 * this.textMargin;
-    height += height / 2;
+    var width = this.text.getBBox().width + 6 * this.textMargin;
+    var height = this.text.getBBox().height + 3 * this.textMargin;
 
     var startX = width / 4;
-    var startY = height / 4;
 
     this.text.attr({
       x: startX + this.textMargin / 2,
     });
 
-    var start = { x: startX, y: startY };
-    var points = [
-      { x: startX - width / 4, y: startY + height / 4 },
-      { x: startX - width / 4 + width / 2, y: startY + height / 4 + height / 2 },
-      { x: startX - width / 4 + width, y: startY + height / 4 },
-      { x: startX - width / 4 + width / 2, y: startY + height / 4 - height / 2 },
-      { x: startX - width / 4, y: startY + height / 4 },
-    ];
-
-    const symbol = drawPath(chart, start, points);
-
-    symbol.attr({
-      fill: this.getAttr('fill'),
-      stroke: this.getAttr('element-color'),
-      'stroke-width': this.getAttr('line-width'),
+    this.initSymbol(chart, options, {
+      width,
+      height,
     });
-
-    symbol.node.setAttribute('class', this.getAttr('class'));
-
-    if (options.link) {
-      symbol.attr('href', options.link);
-    }
-    if (options.target) {
-      symbol.attr('target', options.target);
-    }
-
-    //ndrqu Add click function with event and options params
-    if (options.function) {
-      symbol.node.addEventListener(
-        'click',
-        function (evt) {
-          window[options.function](evt, options);
-        },
-        false
-      );
-      symbol.attr({ cursor: 'pointer' });
-    }
-    if (options.key) {
-      symbol.node.id = options.key;
-    }
-
-    this.symbol = symbol;
-    this.group.push(symbol);
-    symbol.insertBefore(this.text);
-
-    this.text.attr({
-      y: symbol.getBBox().height / 2,
-    });
-
-    this.initialize();
   });
 }
 inherits(Condition, Symbol);
@@ -148,7 +97,7 @@ Condition.prototype.render = function () {
     var rightPoint = this.getRight();
 
     if (!this.right_symbol.isPositioned) {
-      this.right_symbol.setY(rightPoint.y - this.right_symbol.height / 2);
+      this.right_symbol.setY(rightPoint.y + this.right_symbol.height / 2);
       this.right_symbol.shiftX(this.group.getBBox().x + this.width + lineLength);
 
       var self = this;

@@ -1,5 +1,8 @@
 const rectangle = require('../data/rectangle');
+const diamond = require('../data/diamond');
+
 const rectData = rectangle.init({ calcBaseRatio });
+const diamondData = diamond.init({ calcBaseRatio });
 
 const typeDataMap = {
   start: rectData,
@@ -7,6 +10,7 @@ const typeDataMap = {
   operation: rectData,
   parallel: rectData,
   subroutine: rectData,
+  condition: diamondData,
 };
 
 function splitNum(str) {

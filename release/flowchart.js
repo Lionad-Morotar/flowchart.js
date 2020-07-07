@@ -190,7 +190,32 @@
 
   var rectangle = data;
 
+  const baseRatio$1 = 10;
+  const paths$1 = {
+    10: 'M6.510043594949674 0.1680424374037116 C8.053727408900238 1.9716394703403708, 9.256016431315658 5.001377242320958, 9.405074706379878 5.855950478685565 M5.702722715027039 0.22225341685624006 C6.708035571513988 1.2516488076941916, 8.165498860428135 2.479548464144401, 10.231666696258277 5.805259104176369 M9.771017171974293 6.2631118792395 C8.67217760985496 6.713957511317894, 6.988745923517895 8.08243827420021, 5.741054505323196 9.827176134345669 M10.26534354064359 6.148658706115972 C8.772018149891945 7.578107990994328, 6.921647280470154 9.107660286429159, 6.2332614775682735 9.796400083567692 M5.745025567489277 10.039002198742766 C4.28792687711917 7.773367901354947, 1.3910694896176747 7.4813071974988095, 0.5578082281051563 5.704053698926727 M5.83242817868229 9.834344548730186 C4.559167542419283 8.9440601620854, 2.805076977270545 8.336016737506554, -0.018665631289848272 5.658020618638497 M-0.8082275068507091 5.676719283514197 C1.0909808560685166 5.048022691174767, 2.665634974807723 1.8797394500043438, 6.3868019936148395 0.30589790736199296 M-0.41019068360700767 6.089598391835018 C1.7596188451358428 4.131073520211086, 3.315255966134413 2.560759180687082, 5.744513850423759 -0.06397687639548699',
+  };
+  const pathsXChange$1 = {
+    10: 'M11.76506539242451 0.25206365610556736 C15.294864776122388 1.7762087597609457, 18.284476740846657 5.1346369866306825, 19.107612059569817 5.783925718028348 M10.554084072540558 0.33338012528436023 C12.740745254756387 1.1489141248273473, 15.631673058996947 2.286030738633323, 20.347500044387417 5.707888656264554 M19.601329782806285 6.458090551798417 C17.024336135562038 6.313440682522664, 13.451319345287406 7.761143695574717, 10.549163325939245 9.69910526195032 M20.46197598261584 6.258822022445883 C17.101515058339235 7.668548242930303, 13.144010359366568 9.260052678361088, 11.406119553710074 9.645522663841072 M10.58613829211734 10.063306412426984 C7.7110639740267874 7.355568066462459, 2.5205679486720314 7.846968657755701, 0.9054063330247462 5.519634810448733 M10.728005825993403 9.731116381719119 C8.380405067888368 8.881220554418467, 5.230078284245453 8.493508292410324, -0.030297116335378904 5.444916223806188 M-1.1934856591812149 5.522620925735329 C2.238005868639561 5.4318608188831945, 5.186988621332819 1.5869592329633084, 11.571179065806389 0.45171039406051605 M-0.6057164526882783 6.132307295698791 C3.2340359698754857 4.051934469164202, 6.1508070733544375 2.561186924680089, 10.622731157930025 -0.09447276150590955',
+  };
+  const pathsYChange$1 = {
+    10: 'M6.827877176632624 0.2727580544286141 C8.336141138206202 3.694802048158655, 9.302080508662765 9.111150676980333, 9.034347108234623 10.76618604334627 M5.5174744241524865 0.3607505967446818 C6.574655690776534 2.3476563994498876, 8.354798091069558 4.636967964718795, 10.376029759646396 10.683906347210804 M9.601329782806285 11.458090551798417 C8.638043752766674 12.87740636846767, 6.641995895947688 15.902078314975366, 5.5491633259392446 19.69910526195032 M10.46197598261584 11.258822022445884 C8.950432552774098 14.494393323264996, 6.800367409215452 17.8933373141098, 6.406119553710074 19.645522663841074 M5.6175383512339145 20.05850329811415 C4.619784306161891 15.487911429066092, 1.4364886739284242 13.887829924263109, 0.8367123421577345 10.55608054839009 M5.748642268023435 19.75151682309528 C4.533166545665187 17.704543474786888, 2.6232456716823607 16.071263364178336, -0.02799844693477238 10.487030927957745 M-1.1934856591812149 10.52262092573533 C0.7749794669595977 8.965147793927951, 2.2666160531687978 3.662900041524007, 6.571179065806389 0.45171039406051605 M-0.6057164526882783 11.13230729569879 C1.7582778780494936 7.642476845485011, 3.2273520079587543 4.704032327431207, 5.6227311579300245 -0.09447276150590955',
+  };
+
+  const data$1 = {
+    baseRatio: baseRatio$1,
+    path: paths$1[baseRatio$1],
+    init({ calcBaseRatio }) {
+      const ref = (data$1.ratioBase = {});
+      ref.x = calcBaseRatio(data$1.path, pathsXChange$1[baseRatio$1]);
+      ref.y = calcBaseRatio(data$1.path, pathsYChange$1[baseRatio$1]);
+      return data$1;
+    },
+  };
+
+  var diamond = data$1;
+
   const rectData = rectangle.init({ calcBaseRatio });
+  const diamondData = diamond.init({ calcBaseRatio });
 
   const typeDataMap = {
     start: rectData,
@@ -198,6 +223,7 @@
     operation: rectData,
     parallel: rectData,
     subroutine: rectData,
+    condition: diamondData,
   };
 
   function splitNum(str) {
@@ -518,7 +544,7 @@
         var rightPoint = this.getRight();
 
         if (!this.next.isPositioned) {
-          this.next.setY(rightPoint.y - this.next.height / 2);
+          this.next.setY(rightPoint.y + this.next.height / 2);
           this.next.shiftX(this.group.getBBox().x + this.width + lineLength);
 
           (function shift() {
@@ -549,7 +575,7 @@
         var leftPoint = this.getLeft();
 
         if (!this.next.isPositioned) {
-          this.next.setY(leftPoint.y - this.next.height / 2);
+          this.next.setY(leftPoint.y + this.next.height / 2);
           this.next.shiftX(-(this.group.getBBox().x + this.width + lineLength));
 
           (function shift() {
@@ -1099,10 +1125,10 @@
     this.group.push(this.text);
   };
 
-  Symbol.prototype.initSymbol = function (chart, options) {
+  Symbol.prototype.initSymbol = function (chart, options, calced = {}) {
     this.textMargin = this.getAttr('text-margin');
-    const width = this.text.getBBox().width + 2 * this.textMargin;
-    const height = this.text.getBBox().height + 2 * this.textMargin;
+    const width = calced.width || this.text.getBBox().width + 2 * this.textMargin;
+    const height = calced.height || this.text.getBBox().height + 2 * this.textMargin;
     const pathVal = util_excalibur$1.calcPath({
       type: this.symbolType,
       width,
@@ -1154,8 +1180,6 @@
   var flowchart_symbol = Symbol;
 
   var inherits = flowchart_helpers.inherits;
-
-  var drawPath$1 = flowchart_functions.drawPath;
 
   function Condition(chart, options) {
     options = options || {};
@@ -1209,68 +1233,19 @@
 
       this.textMargin = this.getAttr('text-margin');
 
-      var width = this.text.getBBox().width + 3 * this.textMargin;
-      width += width / 2;
-      var height = this.text.getBBox().height + 2 * this.textMargin;
-      height += height / 2;
+      var width = this.text.getBBox().width + 6 * this.textMargin;
+      var height = this.text.getBBox().height + 3 * this.textMargin;
 
       var startX = width / 4;
-      var startY = height / 4;
 
       this.text.attr({
         x: startX + this.textMargin / 2,
       });
 
-      var start = { x: startX, y: startY };
-      var points = [
-        { x: startX - width / 4, y: startY + height / 4 },
-        { x: startX - width / 4 + width / 2, y: startY + height / 4 + height / 2 },
-        { x: startX - width / 4 + width, y: startY + height / 4 },
-        { x: startX - width / 4 + width / 2, y: startY + height / 4 - height / 2 },
-        { x: startX - width / 4, y: startY + height / 4 },
-      ];
-
-      const symbol = drawPath$1(chart, start, points);
-
-      symbol.attr({
-        fill: this.getAttr('fill'),
-        stroke: this.getAttr('element-color'),
-        'stroke-width': this.getAttr('line-width'),
+      this.initSymbol(chart, options, {
+        width,
+        height,
       });
-
-      symbol.node.setAttribute('class', this.getAttr('class'));
-
-      if (options.link) {
-        symbol.attr('href', options.link);
-      }
-      if (options.target) {
-        symbol.attr('target', options.target);
-      }
-
-      //ndrqu Add click function with event and options params
-      if (options.function) {
-        symbol.node.addEventListener(
-          'click',
-          function (evt) {
-            window[options.function](evt, options);
-          },
-          false
-        );
-        symbol.attr({ cursor: 'pointer' });
-      }
-      if (options.key) {
-        symbol.node.id = options.key;
-      }
-
-      this.symbol = symbol;
-      this.group.push(symbol);
-      symbol.insertBefore(this.text);
-
-      this.text.attr({
-        y: symbol.getBBox().height / 2,
-      });
-
-      this.initialize();
     });
   }
   inherits(Condition, flowchart_symbol);
@@ -1302,7 +1277,7 @@
       var rightPoint = this.getRight();
 
       if (!this.right_symbol.isPositioned) {
-        this.right_symbol.setY(rightPoint.y - this.right_symbol.height / 2);
+        this.right_symbol.setY(rightPoint.y + this.right_symbol.height / 2);
         this.right_symbol.shiftX(this.group.getBBox().x + this.width + lineLength);
 
         var self = this;
@@ -1785,7 +1760,7 @@
 
   var inherits$5 = flowchart_helpers.inherits;
 
-  var drawPath$2 = flowchart_functions.drawPath;
+  var drawPath$1 = flowchart_functions.drawPath;
 
   function InputOutput(chart, options) {
     options = options || {};
@@ -1810,7 +1785,7 @@
         { x: startX, y: startY },
       ];
 
-      var symbol = drawPath$2(chart, start, points);
+      var symbol = drawPath$1(chart, start, points);
 
       symbol.attr({
         stroke: this.getAttr('element-color'),

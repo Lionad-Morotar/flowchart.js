@@ -105,7 +105,7 @@ Symbol.prototype.render = function () {
       var rightPoint = this.getRight();
 
       if (!this.next.isPositioned) {
-        this.next.setY(rightPoint.y - this.next.height / 2);
+        this.next.setY(rightPoint.y + this.next.height / 2);
         this.next.shiftX(this.group.getBBox().x + this.width + lineLength);
 
         (function shift() {
@@ -136,7 +136,7 @@ Symbol.prototype.render = function () {
       var leftPoint = this.getLeft();
 
       if (!this.next.isPositioned) {
-        this.next.setY(leftPoint.y - this.next.height / 2);
+        this.next.setY(leftPoint.y + this.next.height / 2);
         this.next.shiftX(-(this.group.getBBox().x + this.width + lineLength));
 
         (function shift() {
@@ -686,10 +686,10 @@ Symbol.prototype.initText = function (chart, options) {
   this.group.push(this.text);
 };
 
-Symbol.prototype.initSymbol = function (chart, options) {
+Symbol.prototype.initSymbol = function (chart, options, calced = {}) {
   this.textMargin = this.getAttr('text-margin');
-  const width = this.text.getBBox().width + 2 * this.textMargin;
-  const height = this.text.getBBox().height + 2 * this.textMargin;
+  const width = calced.width || this.text.getBBox().width + 2 * this.textMargin;
+  const height = calced.height || this.text.getBBox().height + 2 * this.textMargin;
   const pathVal = utils.calcPath({
     type: this.symbolType,
     width,
